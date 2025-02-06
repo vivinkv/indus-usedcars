@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_widget_moments",
+  "info": {
+    "displayName": "Moments"
+  },
+  "options": {},
+  "attributes": {
+    "Heading": {
+      "type": "string",
+      "required": true
+    },
+    "Content": {
+      "type": "text",
+      "required": true
+    },
+    "Instagram_Shorts": {
+      "allowedTypes": [
+        "files",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": true,
+      "required": true
+    },
+    "Company_Name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

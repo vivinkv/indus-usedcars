@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_seo_seos",
+  "info": {
+    "displayName": "SEO",
+    "icon": "globe"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "unique": false
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Keywords": {
+      "type": "text"
+    },
+    "OG_Image": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_seo_google_tag_managers",
+  "info": {
+    "displayName": "Google Tag Manager",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Body": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Head": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Other": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    }
+  }
+}
