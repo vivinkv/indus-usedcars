@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cars",
+  "info": {
+    "singularName": "car",
+    "pluralName": "cars",
+    "displayName": "Car",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "brand": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::brand.brand"
+    },
+    "model": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::model.model"
+    },
+    "outlet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::outlet.outlet"
+    },
+    "fuel_type": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::fuel-type.fuel-type"
+    },
+    "Color": {
+      "type": "string"
+    },
+    "Kilometers": {
+      "type": "string"
+    },
+    "PSP": {
+      "type": "string"
+    },
+    "Year_Of_Month": {
+      "type": "string"
+    },
+    "Variant": {
+      "type": "string"
+    },
+    "Vehicle_Reg_No": {
+      "type": "string"
+    },
+    "vehicle_category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::vehicle-category.vehicle-category"
+    },
+    "Vehicle_Status": {
+      "type": "enumeration",
+      "enum": [
+        "SOLD",
+        "STOCK"
+      ]
+    },
+    "Image": {
+      "displayName": "Image",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.image"
+    },
+    "Image_URL": {
+      "type": "json"
+    }
+  }
+}

@@ -13,6 +13,20 @@ export interface ButtonButton extends Struct.ComponentSchema {
   };
 }
 
+export interface CarImage extends Struct.ComponentSchema {
+  collectionName: 'components_car_images';
+  info: {
+    description: '';
+    displayName: 'Image';
+  };
+  attributes: {
+    Back_Image: Schema.Attribute.Media<'images' | 'files'>;
+    Front_Image: Schema.Attribute.Media<'images' | 'files'>;
+    LeftSide_Image: Schema.Attribute.Media<'images' | 'files'>;
+    RightSide_Image: Schema.Attribute.Media<'images' | 'files'>;
+  };
+}
+
 export interface CommonAuthor extends Struct.ComponentSchema {
   collectionName: 'components_common_authors';
   info: {
@@ -255,6 +269,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'button.button': ButtonButton;
+      'car.image': CarImage;
       'common.author': CommonAuthor;
       'common.faq': CommonFaq;
       'common.questions': CommonQuestions;

@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * thank-you service
+ * outlet service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::thank-you.thank-you');
+module.exports = createCoreService('api::outlet.outlet');
