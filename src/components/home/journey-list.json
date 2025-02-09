@@ -1,22 +1,17 @@
 {
-  "collectionName": "components_seo_seos",
+  "collectionName": "components_home_journey_lists",
   "info": {
-    "displayName": "SEO",
-    "icon": "globe"
+    "displayName": "Journey List"
   },
   "options": {},
   "attributes": {
     "Title": {
-      "type": "string",
-      "unique": false
+      "type": "string"
     },
     "Description": {
       "type": "text"
     },
-    "Keywords": {
-      "type": "text"
-    },
-    "OG_Image": {
+    "Image": {
       "allowedTypes": [
         "images",
         "files"

@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_contact_certified_excellences",
+  "info": {
+    "displayName": "Certified Excellence"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Content": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Image": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "Image_Section": {
+      "displayName": "Image Section",
+      "type": "component",
+      "repeatable": true,
+      "component": "contact.image-section"
+    }
+  }
+}

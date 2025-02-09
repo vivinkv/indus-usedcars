@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_contact_modal_forms",
+  "info": {
+    "displayName": "Modal Form"
+  },
+  "options": {},
+  "attributes": {
+    "Content": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Image": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "Form_Title": {
+      "type": "string"
+    },
+    "Form_Image": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

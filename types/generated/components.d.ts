@@ -13,6 +13,19 @@ export interface ButtonButton extends Struct.ComponentSchema {
   };
 }
 
+export interface CarFindMoreSection extends Struct.ComponentSchema {
+  collectionName: 'components_car_find_more_sections';
+  info: {
+    displayName: 'Find More Section';
+  };
+  attributes: {
+    Content: Schema.Attribute.String;
+    Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
+    URL: Schema.Attribute.String;
+  };
+}
+
 export interface CarImage extends Struct.ComponentSchema {
   collectionName: 'components_car_images';
   info: {
@@ -24,6 +37,18 @@ export interface CarImage extends Struct.ComponentSchema {
     Front_Image: Schema.Attribute.Media<'images' | 'files'>;
     LeftSide_Image: Schema.Attribute.Media<'images' | 'files'>;
     RightSide_Image: Schema.Attribute.Media<'images' | 'files'>;
+  };
+}
+
+export interface CarInspectionReportSection extends Struct.ComponentSchema {
+  collectionName: 'components_car_inspection_report_sections';
+  info: {
+    displayName: 'Inspection Report Section';
+  };
+  attributes: {
+    Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Report_Status: Schema.Attribute.Enumeration<['Pass', 'Fail']>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -49,6 +74,36 @@ export interface CommonAuthor extends Struct.ComponentSchema {
   };
 }
 
+export interface CommonBenefitSection extends Struct.ComponentSchema {
+  collectionName: 'components_common_benefit_sections';
+  info: {
+    displayName: 'Benefit Section';
+  };
+  attributes: {
+    Button: Schema.Attribute.Component<'button.button', false>;
+    Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+    Points: Schema.Attribute.Component<'common.points', true>;
+    Title: Schema.Attribute.String;
+    URL: Schema.Attribute.String;
+  };
+}
+
+export interface CommonBenefitsAndAdvantagesSection
+  extends Struct.ComponentSchema {
+  collectionName: 'components_common_benefits_and_advantages_sections';
+  info: {
+    displayName: 'Benefits and Advantages Section';
+  };
+  attributes: {
+    Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+    Points: Schema.Attribute.Component<'common.points', true>;
+    Title: Schema.Attribute.String;
+    URL: Schema.Attribute.String;
+  };
+}
+
 export interface CommonFaq extends Struct.ComponentSchema {
   collectionName: 'components_common_faqs';
   info: {
@@ -59,6 +114,17 @@ export interface CommonFaq extends Struct.ComponentSchema {
     Title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Frequently Asked Questions'>;
+  };
+}
+
+export interface CommonPoints extends Struct.ComponentSchema {
+  collectionName: 'components_common_points';
+  info: {
+    displayName: 'Points';
+  };
+  attributes: {
+    Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -77,6 +143,101 @@ export interface CommonQuestions extends Struct.ComponentSchema {
         }
       >;
     Question: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface ContactCertifiedExcellence extends Struct.ComponentSchema {
+  collectionName: 'components_contact_certified_excellences';
+  info: {
+    displayName: 'Certified Excellence';
+  };
+  attributes: {
+    Content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+    Image_Section: Schema.Attribute.Component<'contact.image-section', true>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface ContactImageSection extends Struct.ComponentSchema {
+  collectionName: 'components_contact_image_sections';
+  info: {
+    displayName: 'Image Section';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+  };
+}
+
+export interface ContactModalForm extends Struct.ComponentSchema {
+  collectionName: 'components_contact_modal_forms';
+  info: {
+    displayName: 'Modal Form';
+  };
+  attributes: {
+    Content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Form_Image: Schema.Attribute.Media<'images' | 'files'>;
+    Form_Title: Schema.Attribute.String;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+  };
+}
+
+export interface HomeBannerSection extends Struct.ComponentSchema {
+  collectionName: 'components_home_banner_sections';
+  info: {
+    displayName: 'Banner Section';
+  };
+  attributes: {
+    Cover_Image: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface HomeBuyAndSellSection extends Struct.ComponentSchema {
+  collectionName: 'components_home_buy_and_sell_sections';
+  info: {
+    displayName: 'Buy And Sell Section';
+  };
+  attributes: {
+    Button: Schema.Attribute.Component<'button.button', false>;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface HomeCarJourney extends Struct.ComponentSchema {
+  collectionName: 'components_home_car_journeys';
+  info: {
+    displayName: 'Car Journey';
+  };
+  attributes: {
+    Description: Schema.Attribute.Text;
+    Journey: Schema.Attribute.Component<'home.journey-list', true>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface HomeJourneyList extends Struct.ComponentSchema {
+  collectionName: 'components_home_journey_lists';
+  info: {
+    displayName: 'Journey List';
+  };
+  attributes: {
+    Description: Schema.Attribute.Text;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -102,6 +263,26 @@ export interface MenuHeader extends Struct.ComponentSchema {
     Link: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'#'>;
+  };
+}
+
+export interface OfferExclusiveDealsSection extends Struct.ComponentSchema {
+  collectionName: 'components_offer_exclusive_deals_sections';
+  info: {
+    displayName: 'Exclusive Deals Section';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<'images' | 'files'>;
+  };
+}
+
+export interface OfferOfferSection extends Struct.ComponentSchema {
+  collectionName: 'components_offer_offer_sections';
+  info: {
+    displayName: 'Offer Section';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<'images' | 'files'>;
   };
 }
 
@@ -141,20 +322,6 @@ export interface SeoGoogleTagManager extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
-  };
-}
-
-export interface SeoSeo extends Struct.ComponentSchema {
-  collectionName: 'components_seo_seos';
-  info: {
-    displayName: 'SEO';
-    icon: 'globe';
-  };
-  attributes: {
-    Description: Schema.Attribute.Text;
-    Keywords: Schema.Attribute.Text;
-    OG_Image: Schema.Attribute.Media<'images' | 'files'>;
-    Title: Schema.Attribute.String;
   };
 }
 
@@ -201,6 +368,60 @@ export interface SettingsSocialMediaLinks extends Struct.ComponentSchema {
     Linkedin_URL: Schema.Attribute.String;
     Twitter_URL: Schema.Attribute.String;
     Youtube_URL: Schema.Attribute.String;
+  };
+}
+
+export interface SharedMetaSocial extends Struct.ComponentSchema {
+  collectionName: 'components_shared_meta_socials';
+  info: {
+    description: '';
+    displayName: 'metaSocial';
+    icon: 'project-diagram';
+  };
+  attributes: {
+    Description: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 65;
+      }>;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    Social_Network: Schema.Attribute.Enumeration<['Facebook', 'Twitter']> &
+      Schema.Attribute.Required;
+    Title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+  };
+}
+
+export interface SharedSeo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_seos';
+  info: {
+    description: '';
+    displayName: 'seo';
+    icon: 'search';
+  };
+  attributes: {
+    CanonicalURL: Schema.Attribute.String;
+    Keywords: Schema.Attribute.Text;
+    Meta_Description: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+        minLength: 50;
+      }>;
+    Meta_Image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
+      Schema.Attribute.Required;
+    Meta_Robots: Schema.Attribute.String;
+    Meta_Social: Schema.Attribute.Component<'shared.meta-social', true>;
+    Meta_Title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    Meta_Viewport: Schema.Attribute.String;
+    Structured_Data: Schema.Attribute.JSON;
   };
 }
 
@@ -269,18 +490,33 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'button.button': ButtonButton;
+      'car.find-more-section': CarFindMoreSection;
       'car.image': CarImage;
+      'car.inspection-report-section': CarInspectionReportSection;
       'common.author': CommonAuthor;
+      'common.benefit-section': CommonBenefitSection;
+      'common.benefits-and-advantages-section': CommonBenefitsAndAdvantagesSection;
       'common.faq': CommonFaq;
+      'common.points': CommonPoints;
       'common.questions': CommonQuestions;
+      'contact.certified-excellence': ContactCertifiedExcellence;
+      'contact.image-section': ContactImageSection;
+      'contact.modal-form': ContactModalForm;
+      'home.banner-section': HomeBannerSection;
+      'home.buy-and-sell-section': HomeBuyAndSellSection;
+      'home.car-journey': HomeCarJourney;
+      'home.journey-list': HomeJourneyList;
       'insights.features': InsightsFeatures;
       'menu.header': MenuHeader;
+      'offer.exclusive-deals-section': OfferExclusiveDealsSection;
+      'offer.offer-section': OfferOfferSection;
       'other.videos': OtherVideos;
       'seo.google-tag-manager': SeoGoogleTagManager;
-      'seo.seo': SeoSeo;
       'settings.contact': SettingsContact;
       'settings.smtp': SettingsSmtp;
       'settings.social-media-links': SettingsSocialMediaLinks;
+      'shared.meta-social': SharedMetaSocial;
+      'shared.seo': SharedSeo;
       'widget.brand-section': WidgetBrandSection;
       'widget.call-to-action': WidgetCallToAction;
       'widget.insights': WidgetInsights;

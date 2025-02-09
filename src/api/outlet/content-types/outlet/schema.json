@@ -4,7 +4,8 @@
   "info": {
     "singularName": "outlet",
     "pluralName": "outlets",
-    "displayName": "Outlet"
+    "displayName": "Outlet",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -18,6 +19,12 @@
     "Slug": {
       "type": "uid",
       "targetField": "Name"
+    },
+    "Location": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::location.location",
+      "inversedBy": "Outlets"
     }
   }
 }

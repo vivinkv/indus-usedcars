@@ -409,36 +409,85 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
+    Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     Color: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    fuel_type: Schema.Attribute.Relation<
+    Find_More: Schema.Attribute.Component<'car.find-more-section', true>;
+    Fuel_Type: Schema.Attribute.Relation<
       'oneToOne',
       'api::fuel-type.fuel-type'
     >;
+    Home_Test_Drive: Schema.Attribute.Enumeration<
+      ['Available', 'Not Available']
+    >;
     Image: Schema.Attribute.Component<'car.image', false>;
     Image_URL: Schema.Attribute.JSON;
+    Inspection_Report: Schema.Attribute.Component<
+      'car.inspection-report-section',
+      true
+    >;
+    Insurance_Type: Schema.Attribute.Enumeration<['Third Party']>;
+    Insurance_Validity: Schema.Attribute.Date;
     Kilometers: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::car.car'> &
       Schema.Attribute.Private;
-    model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
-    outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
+    Location: Schema.Attribute.Relation<'oneToOne', 'api::location.location'>;
+    Model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
+    Name: Schema.Attribute.String;
+    Outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
+    Owner_Type: Schema.Attribute.String;
     PSP: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    Registration_Year: Schema.Attribute.Date;
+    Slug: Schema.Attribute.UID<'Name'>;
+    Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Variant: Schema.Attribute.String;
-    vehicle_category: Schema.Attribute.Relation<
+    Vehicle_Category: Schema.Attribute.Relation<
       'oneToOne',
       'api::vehicle-category.vehicle-category'
     >;
-    Vehicle_Reg_No: Schema.Attribute.String;
+    Vehicle_Reg_No: Schema.Attribute.String & Schema.Attribute.Unique;
     Vehicle_Status: Schema.Attribute.Enumeration<['SOLD', 'STOCK']>;
     Year_Of_Month: Schema.Attribute.String;
+  };
+}
+
+export interface ApiContactFormUiContactFormUi extends Struct.SingleTypeSchema {
+  collectionName: 'contact_form_uis';
+  info: {
+    description: '';
+    displayName: 'Contact Form';
+    pluralName: 'contact-form-uis';
+    singularName: 'contact-form-ui';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Certified_Excellence: Schema.Attribute.Component<
+      'contact.certified-excellence',
+      false
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-form-ui.contact-form-ui'
+    > &
+      Schema.Attribute.Private;
+    Modal_Form: Schema.Attribute.Component<'contact.modal-form', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -514,6 +563,50 @@ export interface ApiGeneralGeneral extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiHomeHome extends Struct.SingleTypeSchema {
+  collectionName: 'homes';
+  info: {
+    description: '';
+    displayName: 'Home';
+    pluralName: 'homes';
+    singularName: 'home';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Banner_Section: Schema.Attribute.Component<'home.banner-section', false>;
+    Bottom_Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Brands: Schema.Attribute.Component<'widget.brand-section', false>;
+    Buy_Sell: Schema.Attribute.Component<'home.buy-and-sell-section', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    FAQ: Schema.Attribute.Component<'common.faq', false>;
+    Featured_Cars: Schema.Attribute.Relation<'oneToMany', 'api::car.car'>;
+    Insight: Schema.Attribute.Component<'widget.insights', false>;
+    Journey: Schema.Attribute.Component<'home.car-journey', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
+    Testimonials: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
   collectionName: 'locations';
   info: {
@@ -526,9 +619,28 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Assurance_Section: Schema.Attribute.Component<
+      'common.benefits-and-advantages-section',
+      false
+    >;
+    Benefit_Section: Schema.Attribute.Component<
+      'common.benefit-section',
+      false
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Exclusive_Section: Schema.Attribute.Component<
+      'offer.exclusive-deals-section',
+      true
+    >;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -536,9 +648,12 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
       'api::location.location'
     > &
       Schema.Attribute.Private;
-    Name: Schema.Attribute.String & Schema.Attribute.Required;
+    Offer_Section: Schema.Attribute.Component<'offer.offer-section', true>;
+    Outlets: Schema.Attribute.Relation<'oneToMany', 'api::outlet.outlet'>;
+    Place: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    Slug: Schema.Attribute.UID<'Name'> & Schema.Attribute.Required;
+    Slug: Schema.Attribute.UID<'Place'> & Schema.Attribute.Required;
+    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -599,6 +714,7 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
 export interface ApiOutletOutlet extends Struct.CollectionTypeSchema {
   collectionName: 'outlets';
   info: {
+    description: '';
     displayName: 'Outlet';
     pluralName: 'outlets';
     singularName: 'outlet';
@@ -616,6 +732,7 @@ export interface ApiOutletOutlet extends Struct.CollectionTypeSchema {
       'api::outlet.outlet'
     > &
       Schema.Attribute.Private;
+    Location: Schema.Attribute.Relation<'manyToOne', 'api::location.location'>;
     Name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     Slug: Schema.Attribute.UID<'Name'>;
@@ -1235,8 +1352,10 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::brand.brand': ApiBrandBrand;
       'api::car.car': ApiCarCar;
+      'api::contact-form-ui.contact-form-ui': ApiContactFormUiContactFormUi;
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;
       'api::general.general': ApiGeneralGeneral;
+      'api::home.home': ApiHomeHome;
       'api::location.location': ApiLocationLocation;
       'api::menu.menu': ApiMenuMenu;
       'api::model.model': ApiModelModel;

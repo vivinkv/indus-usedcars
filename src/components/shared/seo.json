@@ -1,0 +1,54 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": {
+    "displayName": "seo",
+    "icon": "search",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Meta_Title": {
+      "required": true,
+      "type": "string",
+      "maxLength": 60
+    },
+    "Meta_Description": {
+      "type": "string",
+      "required": true,
+      "maxLength": 160,
+      "minLength": 50
+    },
+    "Meta_Image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
+    },
+    "Meta_Social": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.meta-social"
+    },
+    "Keywords": {
+      "type": "text",
+      "regex": "[^,]+"
+    },
+    "Meta_Robots": {
+      "type": "string",
+      "regex": "[^,]+"
+    },
+    "Structured_Data": {
+      "type": "json"
+    },
+    "Meta_Viewport": {
+      "type": "string"
+    },
+    "CanonicalURL": {
+      "type": "string"
+    }
+  }
+}

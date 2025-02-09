@@ -12,14 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Name": {
+    "Place": {
       "type": "string",
       "required": true
     },
     "Slug": {
       "type": "uid",
-      "targetField": "Name",
-      "required": true
+      "required": true,
+      "targetField": "Place"
     },
     "Image": {
       "type": "media",
@@ -29,6 +29,46 @@
         "images",
         "files"
       ]
+    },
+    "Outlets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::outlet.outlet",
+      "mappedBy": "Location"
+    },
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Offer_Section": {
+      "displayName": "Offer Section",
+      "type": "component",
+      "repeatable": true,
+      "component": "offer.offer-section"
+    },
+    "Exclusive_Section": {
+      "displayName": "Exclusive Deals Section",
+      "type": "component",
+      "repeatable": true,
+      "component": "offer.exclusive-deals-section"
+    },
+    "Assurance_Section": {
+      "displayName": "Benefits and Advantages Section",
+      "type": "component",
+      "repeatable": false,
+      "component": "common.benefits-and-advantages-section"
+    },
+    "Benefit_Section": {
+      "displayName": "Benefit Section",
+      "type": "component",
+      "repeatable": false,
+      "component": "common.benefit-section"
     }
   }
 }
