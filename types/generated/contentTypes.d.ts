@@ -607,6 +607,42 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiLeadLead extends Struct.CollectionTypeSchema {
+  collectionName: 'leads';
+  info: {
+    description: '';
+    displayName: 'Leads';
+    pluralName: 'leads';
+    singularName: 'lead';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    API_Status: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    City: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    CustomerEmail: Schema.Attribute.Email;
+    CustomerName: Schema.Attribute.String & Schema.Attribute.Required;
+    Date: Schema.Attribute.Date;
+    Lead_Type: Schema.Attribute.Enumeration<['Buy', 'Sell', 'Book']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::lead.lead'> &
+      Schema.Attribute.Private;
+    MobileNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    Notes: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Test Lead from Spiderworks Technologies'>;
+    publishedAt: Schema.Attribute.DateTime;
+    SourceType: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    utmSource: Schema.Attribute.String;
+  };
+}
+
 export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
   collectionName: 'locations';
   info: {
@@ -1356,6 +1392,7 @@ declare module '@strapi/strapi' {
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;
       'api::general.general': ApiGeneralGeneral;
       'api::home.home': ApiHomeHome;
+      'api::lead.lead': ApiLeadLead;
       'api::location.location': ApiLocationLocation;
       'api::menu.menu': ApiMenuMenu;
       'api::model.model': ApiModelModel;
