@@ -4,10 +4,10 @@
   "private": true,
   "description": "A Strapi application",
   "scripts": {
-    "build": "strapi build",
+    "build": "strapi-plugin build && strapi build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
-    "start": "strapi start",
+    "start": "strapi-plugin watch && strapi start",
     "strapi": "strapi",
     "watch:excel": "/src/plugins/excel-export && npm run watch",
     "build:excel": "/src/plugins/excel-export && npm run build"
