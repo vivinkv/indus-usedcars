@@ -7,7 +7,7 @@ module.exports = () => ({
   },
   'excel-export': {
     enabled: true,
-    resolve: './src/plugins/excel-export'
+    resolve: '/src/plugins/excel-export'
   },
 
   
