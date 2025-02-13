@@ -9,8 +9,8 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
-    "watch:excel": " cd src/plugins/excel-export && npm run watch",
-    "build:excel": " cd src/plugins/excel-export && npm run build"
+    "watch:excel": "/src/plugins/excel-export && npm run watch",
+    "build:excel": "/src/plugins/excel-export && npm run build"
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^5.0.1",
