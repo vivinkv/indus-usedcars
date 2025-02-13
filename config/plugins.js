@@ -5,10 +5,10 @@ module.exports = () => ({
   seo: {
     enabled: true,
   },
-  // 'excel-export': {
-  //   enabled: true,
-  //   resolve: './src/plugins/excel-export'
-  // },
+  'strapi5-excel-export': {
+    enabled: true,
+    resolve: './src/plugins/excel-export'
+  },
 
   
 });

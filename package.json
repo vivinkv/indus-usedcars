@@ -4,11 +4,12 @@
   "private": true,
   "description": "A Strapi application",
   "scripts": {
-    "build": "strapi build",
+    "build": "strapi build && cd src/plugins/excel-export && npm run build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
-    "start": "strapi start",
-    "strapi": "strapi"
+    "start": "strapi start && cd src/plugins/excel-export && npm run watch",
+    "strapi": "strapi",
+    "watch:excel": "cd src/plugins/excel-export && npm run watch"
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^5.0.1",

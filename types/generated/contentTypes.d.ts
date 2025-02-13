@@ -814,6 +814,7 @@ export interface ApiResponsePageResponsePage
 export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
   collectionName: 'testimonials';
   info: {
+    description: '';
     displayName: 'Testimonial';
     pluralName: 'testimonials';
     singularName: 'testimonial';
@@ -840,6 +841,7 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    Slug: Schema.Attribute.UID<'Title'>;
     Title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -871,6 +873,36 @@ export interface ApiVehicleCategoryVehicleCategory
     Name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     Slug: Schema.Attribute.UID<'Name'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWidgetWidget extends Struct.SingleTypeSchema {
+  collectionName: 'widgets';
+  info: {
+    description: '';
+    displayName: 'Widget';
+    pluralName: 'widgets';
+    singularName: 'widget';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    CTA: Schema.Attribute.Component<'widget.call-to-action', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::widget.widget'
+    > &
+      Schema.Attribute.Private;
+    Moments: Schema.Attribute.Component<'widget.moments', false>;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1400,6 +1432,7 @@ declare module '@strapi/strapi' {
       'api::response-page.response-page': ApiResponsePageResponsePage;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::vehicle-category.vehicle-category': ApiVehicleCategoryVehicleCategory;
+      'api::widget.widget': ApiWidgetWidget;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

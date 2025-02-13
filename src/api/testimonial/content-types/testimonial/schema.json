@@ -4,7 +4,8 @@
   "info": {
     "singularName": "testimonial",
     "pluralName": "testimonials",
-    "displayName": "Testimonial"
+    "displayName": "Testimonial",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -27,6 +28,10 @@
       "type": "component",
       "repeatable": false,
       "component": "common.author"
+    },
+    "Slug": {
+      "type": "uid",
+      "targetField": "Title"
     }
   }
 }

@@ -5,10 +5,10 @@ import { PluginIcon } from './components/PluginIcon';
 import ExportButton from './components/ExportButton';
 export default {
   register(app) {
-    app.injectContentManagerComponent('editView', 'right-links', {
-      name: 'export-button',
-      Component: ExportButton,
-    }),
+    // app.injectContentManagerComponent('editView', 'right-links', {
+    //   name: 'export-button',
+    //   Component: ExportButton,
+    // }),
     // app.addMenuLink({
     //   title: 'Excel Export',
     //   to: '/admin/plugins/excel-export',

@@ -6,6 +6,12 @@ const controller = ({ strapi }) => ({
       .service('service')
       
   },
+  msg(ctx) {
+    ctx.body={
+      message: "Welcome to Strapi 🚀",
+      env:process.env.BACKEND_URL
+    }
+  },
   async exportLeads(ctx) {
     const { from, to } = ctx.query;
     const filters = {};

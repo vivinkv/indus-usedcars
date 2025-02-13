@@ -9,6 +9,14 @@ export default [
       policies: [],
     },
   },
+  {
+    method: 'GET',
+    path: '/msg',
+    handler: 'controller.msg',
+    config: {
+      policies: [],
+    },
+  },
 
   {
     method: 'GET',
