@@ -43,6 +43,8 @@ const HomePage = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       setLeadLoading(true);
+      console.log({url:window.location.href});
+      
       try {
         
         const response = await axios.get(`http://localhost:1337/api/leads?pagination[page]=${page}&pagination[pageSize]=${pageSize}`);
@@ -66,6 +68,7 @@ const HomePage = () => {
       // Convert dates to ISO format
       const isoFromDate = fromDate ? new Date(fromDate).toISOString() : null;
       const isoToDate = toDate ? new Date(toDate).toISOString() : null;
+      
 
       // Build URL with proper date formatting
       let url = `http://localhost:1337/api/leads?pagination[page]=${page}&pagination[pageSize]=${pageSize}`;

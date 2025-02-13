@@ -475,14 +475,26 @@ export interface WidgetInsights extends Struct.ComponentSchema {
 export interface WidgetMoments extends Struct.ComponentSchema {
   collectionName: 'components_widget_moments';
   info: {
+    description: '';
     displayName: 'Moments';
   };
   attributes: {
     Company_Name: Schema.Attribute.String & Schema.Attribute.Required;
     Content: Schema.Attribute.Text & Schema.Attribute.Required;
     Heading: Schema.Attribute.String & Schema.Attribute.Required;
-    Instagram_Shorts: Schema.Attribute.Media<'files' | 'videos', true> &
-      Schema.Attribute.Required;
+    Shorts: Schema.Attribute.Component<'widget.shorts', true>;
+  };
+}
+
+export interface WidgetShorts extends Struct.ComponentSchema {
+  collectionName: 'components_widget_shorts';
+  info: {
+    displayName: 'Shorts';
+  };
+  attributes: {
+    Instagram_Shorts: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
   };
 }
 
@@ -521,6 +533,7 @@ declare module '@strapi/strapi' {
       'widget.call-to-action': WidgetCallToAction;
       'widget.insights': WidgetInsights;
       'widget.moments': WidgetMoments;
+      'widget.shorts': WidgetShorts;
     }
   }
 }

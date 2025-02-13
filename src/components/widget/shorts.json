@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_widget_shorts",
+  "info": {
+    "displayName": "Shorts"
+  },
+  "options": {},
+  "attributes": {
+    "Instagram_Shorts": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

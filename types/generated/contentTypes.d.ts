@@ -441,6 +441,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     Owner_Type: Schema.Attribute.String;
     PSP: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Registration_Year: Schema.Attribute.Date;
     Slug: Schema.Attribute.UID<'Name'>;
     Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']>;
