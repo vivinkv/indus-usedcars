@@ -21,6 +21,7 @@ module.exports = {
       console.log(ctx.request.body);
 
       if (!name || !lead_type || !phone_number || !city) {
+        ctx.status = 400;
         ctx.body = {
           message: "All fields are required",
         };
@@ -55,11 +56,13 @@ module.exports = {
         });
       }
 
+      ctx.status = 200;
       ctx.body = {
         message: "Form Submitted Successfully",
         success: true,
       };
     } catch (err) {
+      ctx.status = 500;
       ctx.body = {
         success: false,
         error: err.message,
