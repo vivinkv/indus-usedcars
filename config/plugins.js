@@ -5,10 +5,10 @@ module.exports = () => ({
   seo: {
     enabled: true,
   },
-  'excel-export': {
-    enabled: true,
-    resolve: '/src/plugins/excel-export'
-  },
+  // 'excel-export': {
+  //   enabled: true,
+  //   resolve: '/src/plugins/excel-export'
+  // },
 
   
 });
