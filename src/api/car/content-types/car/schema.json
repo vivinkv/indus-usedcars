@@ -128,6 +128,14 @@
     "Recommended": {
       "type": "boolean",
       "default": false
+    },
+    "Featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "Choose_Next": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

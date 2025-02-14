@@ -410,10 +410,12 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
   };
   attributes: {
     Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
+    Choose_Next: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Color: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Find_More: Schema.Attribute.Component<'car.find-more-section', true>;
     Fuel_Type: Schema.Attribute.Relation<
       'oneToOne',
@@ -590,7 +592,6 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     FAQ: Schema.Attribute.Component<'common.faq', false>;
-    Featured_Cars: Schema.Attribute.Relation<'oneToMany', 'api::car.car'>;
     Insight: Schema.Attribute.Component<'widget.insights', false>;
     Journey: Schema.Attribute.Component<'home.car-journey', false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

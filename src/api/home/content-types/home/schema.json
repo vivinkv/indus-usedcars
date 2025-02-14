@@ -17,11 +17,6 @@
       "repeatable": false,
       "component": "home.banner-section"
     },
-    "Featured_Cars": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::car.car"
-    },
     "Journey": {
       "type": "component",
       "repeatable": false,

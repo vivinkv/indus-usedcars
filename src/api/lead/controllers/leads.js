@@ -16,45 +16,53 @@ module.exports = {
         lead_type,
         phone_number,
         city,
+        recaptcha_token,
       } = ctx.request.body;
 
       console.log(ctx.request.body);
 
-      if (!name || !lead_type || !phone_number || !city) {
+      // Validate required fields
+      if (!name || !lead_type || !phone_number || !city || !recaptcha_token) {
         ctx.status = 400;
         ctx.body = {
-          message: "All fields are required",
+          message: "All fields including recaptcha are required",
         };
         return;
       }
 
-      if (lead_type == "Book") {
-        await strapi.documents("api::lead.lead").create({
-          data: {
-            CustomerName: name,
-            MobileNumber: phone_number,
-            City: city,
-            Lead_Type: lead_type,
-            Date: new Date().toISOString().slice(0, 10),
-            utmSource: utmsource,
-            SourceType: source_type,
-          },
-          status: "published",
-        });
-      } else {
-        await strapi.documents("api::lead.lead").create({
-          data: {
-            CustomerName: name,
-            CustomerEmail: email,
-            MobileNumber: phone_number,
-            City: city,
-            Lead_Type: lead_type,
-            utmSource: utmsource,
-            SourceType: source_type,
-          },
-          status: "published",
-        });
+      // Verify reCAPTCHA token
+      const recaptchaSecret = process.env.RECAPTCHA_SECRECT_KEY;
+      const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptcha_token}`;
+      
+      const recaptchaResponse = await axios.post(verificationUrl);
+      if (!recaptchaResponse.data.success) {
+        ctx.status = 400;
+        ctx.body = {
+          message: "reCAPTCHA verification failed",
+        };
+        return;
       }
+
+      // Create lead based on type
+      const leadData = {
+        CustomerName: name,
+        MobileNumber: phone_number,
+        City: city,
+        Lead_Type: lead_type,
+        utmSource: utmsource,
+        SourceType: source_type,
+      };
+
+      if (lead_type === "Book") {
+        leadData.Date = new Date().toISOString().slice(0, 10);
+      } else {
+        leadData.CustomerEmail = email;
+      }
+
+      await strapi.documents("api::lead.lead").create({
+        data: leadData,
+        status: "published",
+      });
 
       ctx.status = 200;
       ctx.body = {
