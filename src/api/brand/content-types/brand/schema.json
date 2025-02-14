@@ -29,6 +29,10 @@
         "images",
         "files"
       ]
+    },
+    "Featured": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

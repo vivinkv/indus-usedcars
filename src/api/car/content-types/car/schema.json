@@ -84,7 +84,8 @@
       "enum": [
         "Manual",
         "Automatic"
-      ]
+      ],
+      "default": "Manual"
     },
     "Home_Test_Drive": {
       "type": "enumeration",
@@ -136,6 +137,9 @@
     "Choose_Next": {
       "type": "boolean",
       "default": false
+    },
+    "Description": {
+      "type": "text"
     }
   }
 }

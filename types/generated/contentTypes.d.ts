@@ -384,6 +384,7 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::brand.brand'> &
@@ -415,6 +416,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Description: Schema.Attribute.Text;
     Featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Find_More: Schema.Attribute.Component<'car.find-more-section', true>;
     Fuel_Type: Schema.Attribute.Relation<
@@ -446,7 +448,8 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Registration_Year: Schema.Attribute.Date;
     Slug: Schema.Attribute.UID<'Name'>;
-    Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']>;
+    Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']> &
+      Schema.Attribute.DefaultTo<'Manual'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -509,6 +512,7 @@ export interface ApiFuelTypeFuelType extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Featured: Schema.Attribute.Boolean;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -597,6 +601,7 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
       Schema.Attribute.Private;
+    Price: Schema.Attribute.Component<'price.price', false>;
     publishedAt: Schema.Attribute.DateTime;
     SEO: Schema.Attribute.Component<'shared.seo', false>;
     Testimonials: Schema.Attribute.Relation<
@@ -679,6 +684,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
       'offer.exclusive-deals-section',
       true
     >;
+    Featured: Schema.Attribute.Boolean;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

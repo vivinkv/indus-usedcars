@@ -294,6 +294,18 @@ export interface OtherVideos extends Struct.ComponentSchema {
   attributes: {};
 }
 
+export interface PricePrice extends Struct.ComponentSchema {
+  collectionName: 'components_price_prices';
+  info: {
+    description: '';
+    displayName: 'Price';
+  };
+  attributes: {
+    Maximum: Schema.Attribute.BigInteger;
+    Minimum: Schema.Attribute.BigInteger;
+  };
+}
+
 export interface SeoGoogleTagManager extends Struct.ComponentSchema {
   collectionName: 'components_seo_google_tag_managers';
   info: {
@@ -523,6 +535,7 @@ declare module '@strapi/strapi' {
       'offer.exclusive-deals-section': OfferExclusiveDealsSection;
       'offer.offer-section': OfferOfferSection;
       'other.videos': OtherVideos;
+      'price.price': PricePrice;
       'seo.google-tag-manager': SeoGoogleTagManager;
       'settings.contact': SettingsContact;
       'settings.smtp': SettingsSmtp;
