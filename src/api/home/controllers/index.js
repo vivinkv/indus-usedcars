@@ -77,7 +77,18 @@ module.exports = {
             populate: "*",
           },
           Insight: {
-            populate:"*"
+            populate:{
+              Features: {
+                populate: {
+                  Image:{
+                    populate:'*'
+                  }
+                },
+              },
+              Button: {
+                populate: "*",
+              },
+            }
           },
           Testimonials: {
             populate:{
@@ -86,15 +97,12 @@ module.exports = {
               }
             }
           },
-          Brands: {
-            populate: {
-              brands: {
-                populate: "*",
-              },
-            },
-          },
+          
           FAQ: {
             populate: "*",
+          },
+          Price:{
+            populate:"*"
           },
           SEO: {
             populate: {
