@@ -107,9 +107,11 @@ export interface CommonBenefitsAndAdvantagesSection
 export interface CommonFaq extends Struct.ComponentSchema {
   collectionName: 'components_common_faqs';
   info: {
+    description: '';
     displayName: 'FAQ';
   };
   attributes: {
+    Button: Schema.Attribute.Component<'button.button', false>;
     Questions: Schema.Attribute.Component<'common.questions', true>;
     Title: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -178,19 +180,12 @@ export interface ContactImageSection extends Struct.ComponentSchema {
 export interface ContactModalForm extends Struct.ComponentSchema {
   collectionName: 'components_contact_modal_forms';
   info: {
+    description: '';
     displayName: 'Modal Form';
   };
   attributes: {
-    Content: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
-    Form_Image: Schema.Attribute.Media<'images' | 'files'>;
-    Form_Title: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files'>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -501,9 +496,11 @@ export interface WidgetMoments extends Struct.ComponentSchema {
 export interface WidgetShorts extends Struct.ComponentSchema {
   collectionName: 'components_widget_shorts';
   info: {
+    description: '';
     displayName: 'Shorts';
   };
   attributes: {
+    Instagram_Link: Schema.Attribute.String & Schema.Attribute.DefaultTo<'/'>;
     Instagram_Shorts: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;

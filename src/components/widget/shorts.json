@@ -1,19 +1,25 @@
 {
   "collectionName": "components_widget_shorts",
   "info": {
-    "displayName": "Shorts"
+    "displayName": "Shorts",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "Instagram_Shorts": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "Instagram_Link": {
+      "type": "string",
+      "default": "/"
     }
   }
 }
