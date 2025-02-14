@@ -4,7 +4,8 @@
   "info": {
     "singularName": "menu",
     "pluralName": "menus",
-    "displayName": "Menu"
+    "displayName": "Menu",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,6 +16,12 @@
       "type": "component",
       "repeatable": true,
       "component": "menu.header"
+    },
+    "Footer": {
+      "displayName": "Footer",
+      "type": "component",
+      "repeatable": false,
+      "component": "menu.footer"
     }
   }
 }

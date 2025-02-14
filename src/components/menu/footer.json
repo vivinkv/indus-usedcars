@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_menu_footers",
+  "info": {
+    "displayName": "Footer",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Page": {
+      "displayName": "Page",
+      "type": "component",
+      "repeatable": true,
+      "component": "menu.page"
+    }
+  }
+}

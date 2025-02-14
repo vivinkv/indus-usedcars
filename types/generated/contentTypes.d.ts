@@ -707,6 +707,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
 export interface ApiMenuMenu extends Struct.SingleTypeSchema {
   collectionName: 'menus';
   info: {
+    description: '';
     displayName: 'Menu';
     pluralName: 'menus';
     singularName: 'menu';
@@ -718,6 +719,7 @@ export interface ApiMenuMenu extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Footer: Schema.Attribute.Component<'menu.footer', false>;
     Header: Schema.Attribute.Component<'menu.header', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::menu.menu'> &

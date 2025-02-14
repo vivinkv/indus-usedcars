@@ -248,6 +248,17 @@ export interface InsightsFeatures extends Struct.ComponentSchema {
   };
 }
 
+export interface MenuFooter extends Struct.ComponentSchema {
+  collectionName: 'components_menu_footers';
+  info: {
+    description: '';
+    displayName: 'Footer';
+  };
+  attributes: {
+    Page: Schema.Attribute.Component<'menu.page', true>;
+  };
+}
+
 export interface MenuHeader extends Struct.ComponentSchema {
   collectionName: 'components_menu_headers';
   info: {
@@ -258,6 +269,40 @@ export interface MenuHeader extends Struct.ComponentSchema {
     Link: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'#'>;
+  };
+}
+
+export interface MenuLinks extends Struct.ComponentSchema {
+  collectionName: 'components_menu_links';
+  info: {
+    displayName: 'Links';
+  };
+  attributes: {
+    Label: Schema.Attribute.String;
+    URL: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
+  };
+}
+
+export interface MenuLocation extends Struct.ComponentSchema {
+  collectionName: 'components_menu_locations';
+  info: {
+    displayName: 'Location';
+  };
+  attributes: {
+    Label: Schema.Attribute.String;
+    URL: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
+  };
+}
+
+export interface MenuPage extends Struct.ComponentSchema {
+  collectionName: 'components_menu_pages';
+  info: {
+    description: '';
+    displayName: 'Page';
+  };
+  attributes: {
+    Links: Schema.Attribute.Component<'menu.links', true>;
+    Type: Schema.Attribute.String;
   };
 }
 
@@ -528,7 +573,11 @@ declare module '@strapi/strapi' {
       'home.car-journey': HomeCarJourney;
       'home.journey-list': HomeJourneyList;
       'insights.features': InsightsFeatures;
+      'menu.footer': MenuFooter;
       'menu.header': MenuHeader;
+      'menu.links': MenuLinks;
+      'menu.location': MenuLocation;
+      'menu.page': MenuPage;
       'offer.exclusive-deals-section': OfferExclusiveDealsSection;
       'offer.offer-section': OfferOfferSection;
       'other.videos': OtherVideos;
