@@ -13,7 +13,23 @@ module.exports = {
         filters: {
           Featured: true,
         },
-        populate:['Brand','Model','Outlet','Fuel_Type','Image'],
+        populate:{
+          Brand:{
+            populate:"*"
+          },
+          Model:{
+            populate:"*"
+          },
+          Outlet:{
+            populate:"*"
+          },
+          Fuel_Type:{
+            populate:"*"
+          },
+         Image:{
+          populate:'*'
+         }
+        }
       })
 
       const featuredBrands=await strapi.documents("api::brand.brand").findMany({
