@@ -31,6 +31,9 @@ module.exports = {
          }
         }
       })
+      const featuredOutlets=await strapi.documents('api::outlet.outlet').findMany({
+        populate:"*"
+      })
 
       const featuredBrands=await strapi.documents("api::brand.brand").findMany({
         filters: {
@@ -143,6 +146,7 @@ module.exports = {
             choose_next: chooseNextCars,
             recommended: recommendedCars,
             newlyadded: newlyadded,
+            featuredOutlets:featuredOutlets
           }
         }
         
