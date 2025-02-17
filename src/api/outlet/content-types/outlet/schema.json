@@ -29,6 +29,20 @@
     "Featured": {
       "type": "boolean",
       "default": false
+    },
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "Cars": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::car.car"
     }
   }
 }

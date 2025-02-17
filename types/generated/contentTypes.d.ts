@@ -811,10 +811,12 @@ export interface ApiOutletOutlet extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Cars: Schema.Attribute.Relation<'oneToMany', 'api::car.car'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
