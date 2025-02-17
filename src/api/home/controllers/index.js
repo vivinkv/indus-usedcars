@@ -56,7 +56,7 @@ module.exports = {
         filters: {
           Featured: true,
         },
-        populate:['*'],
+        populate:'*',
       })
 
       const featuredLocation=await strapi.documents("api::location.location").findMany({
