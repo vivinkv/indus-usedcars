@@ -21,7 +21,7 @@ module.exports = {
       },
     },{
       method: 'GET',
-      path: '/car-filter/filter',
+      path: '/car-filter/filter/:location',
       handler: 'car-filter.filterCars',
       config: {
         auth: false,

@@ -140,16 +140,17 @@ module.exports = {
             $containsi: search,
           },
         },
-      })
+      });
       ctx.status = 200;
-      ctx.body = { data: brand || [],
+      ctx.body = {
+        data: brand || [],
         meta: {
           page: pagination.page,
           pageSize: pagination.pageSize,
           totalPage: Math.ceil(count / pagination.limit),
           pageCount: count || 0,
         },
-       };
+      };
     } catch (error) {
       ctx.status = 500;
       ctx.body = error;
@@ -158,22 +159,34 @@ module.exports = {
 
   filterCars: async (ctx, next) => {
     try {
-      const { fuel, brand, transmission, year, kilometers, price } = ctx.query;
+      const { location } = ctx.params;
+      const { fuel, brand, transmission, year, kilometers, price, page = 1, pageSize = 10 } = ctx.query;
       console.log(ctx.query);
-      
+
+      // Calculate pagination values
+      const limit = parseInt(pageSize);
+      const start = (parseInt(page) - 1) * limit;
+
       // Build filters dynamically based on provided query parameters
       const filters = {};
 
+      // Add location filter based on slug
+      if (location) {
+        filters.Location = {
+          Slug: location,
+        };
+      }
+
       if (fuel) {
         filters.Fuel_Type = {
-          Name: fuel
+          Name: fuel,
         };
       }
       if (brand) {
         filters.Brand = {
           Name: {
-            $containsi: brand
-          }
+            $containsi: brand,
+          },
         };
       }
       if (transmission) {
@@ -181,31 +194,44 @@ module.exports = {
       }
       if (year) {
         filters.Year_Of_Month = {
-          $lte: parseInt(year) // Filter for years less than or equal to selected
+          $lte: parseInt(year), // Filter for years less than or equal to selected
         };
       }
       if (kilometers) {
         filters.Kilometers = {
-          $lte: parseInt(kilometers) // Filter for kilometers less than or equal to selected
+          $lte: parseInt(kilometers), // Filter for kilometers less than or equal to selected
         };
       }
       if (price) {
         filters.PSP = {
-          $lte: parseInt(price) // Filter for price less than or equal to selected
+          $lte: parseInt(price), // Filter for price less than or equal to selected
         };
       }
 
-      // Fetch cars with dynamic filters
-      const cars = await strapi.documents("api::car.car").findMany({
-        filters: Object.keys(filters).length > 0 ? filters : undefined,
-        populate: ["Brand", "Model", "Outlet", "Fuel_Type", "Image"],
-      });
+      // Fetch cars with dynamic filters and pagination
+      const [cars, count] = await Promise.all([
+        strapi.documents("api::car.car").findMany({
+          filters: Object.keys(filters).length > 0 ? filters : undefined,
+          populate: ["Brand", "Model", "Outlet", "Fuel_Type", "Image"],
+          limit,
+          start,
+        }),
+        strapi.documents("api::car.car").count({
+          filters: Object.keys(filters).length > 0 ? filters : undefined,
+        }),
+      ]);
 
       ctx.status = 200;
       ctx.body = {
         data: cars,
         meta: {
           filtersApplied: Object.keys(filters),
+          pagination: {
+            page: parseInt(page),
+            pageSize: limit,
+            total: count,
+            pageCount: Math.ceil(count / limit),
+          },
         },
       };
     } catch (error) {
