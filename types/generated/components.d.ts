@@ -494,10 +494,11 @@ export interface SharedSeo extends Struct.ComponentSchema {
 export interface WidgetBrandSection extends Struct.ComponentSchema {
   collectionName: 'components_widget_brand_sections';
   info: {
+    description: '';
     displayName: 'Brand Section';
   };
   attributes: {
-    brands: Schema.Attribute.Relation<'oneToMany', 'api::brand.brand'>;
+    Brands: Schema.Attribute.Relation<'oneToMany', 'api::brand.brand'>;
     Button: Schema.Attribute.Component<'button.button', false>;
     Description: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<

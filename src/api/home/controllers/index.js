@@ -147,6 +147,17 @@ module.exports = {
               },
             }
           },
+          Brands:{
+            populate:{
+              Brands:{
+                populate:{
+                  Image:{
+                    populate:'*'
+                  }
+                }
+              }
+            } 
+          },
           Testimonials: {
             populate:{
               Author:{
