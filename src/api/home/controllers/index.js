@@ -47,7 +47,7 @@ module.exports = {
       })
       const featuredOutlets=await strapi.documents('api::outlet.outlet').findMany({
         filters:{
-          featured:true
+          Featured:true
         },
         populate:"*"
       })
@@ -63,7 +63,7 @@ module.exports = {
         filters: {
           Featured: true,
         },
-        populate:['*'],
+        populate:'*',
       })
 
       const featuredFuelType=await strapi.documents("api::fuel-type.fuel-type").findMany({
