@@ -140,6 +140,11 @@
     },
     "Description": {
       "type": "text"
+    },
+    "SEO": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
     }
   }
 }

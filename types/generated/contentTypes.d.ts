@@ -489,6 +489,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Registration_Year: Schema.Attribute.Date;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     Slug: Schema.Attribute.UID<'Name'>;
     Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']> &
       Schema.Attribute.DefaultTo<'Manual'>;

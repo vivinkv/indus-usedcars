@@ -70,7 +70,7 @@ module.exports = {
         filters: {
           Featured: true,
         },
-        populate:['*'],
+        populate:'*',
       })
 
       const recommendedCars=await strapi.documents("api::car.car").findMany({
