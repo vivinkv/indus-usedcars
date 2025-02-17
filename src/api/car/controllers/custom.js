@@ -20,7 +20,7 @@ module.exports = {
             }
           }
         });
-      const cars = await strapi.documents("api::car.car").findFirst({
+      const car = await strapi.documents("api::car.car").findFirst({
         filters: {
           Slug: slug,
         },
@@ -61,9 +61,38 @@ module.exports = {
           },
         },
       });
+
+      // Fetch similar cars based on brand and model
+      const similarCars = await strapi.documents("api::car.car").findMany({
+        filters: {
+          Brand: car.Brand.id,
+          Slug: {
+            $ne: slug // Exclude the current car
+          }
+        },
+        populate: {
+          Brand: {
+            populate: "*",
+          },
+          Model: {
+            populate: "*",
+          },
+          Image: {
+            populate: "*",
+          },
+        },
+        limit: 4 // Limit to 4 similar cars
+      });
+      console.log(similarCars);
+      
+
       ctx.status = 200;
       ctx.body = {
-        data: {content:static_content,...cars,},
+        data: {
+          content: static_content,
+          ...car,
+          similarCars:similarCars
+        },
       };
     } catch (err) {
       ctx.status = 500;
