@@ -28,11 +28,6 @@
         "videos"
       ]
     },
-    "Meta_Social": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.meta-social"
-    },
     "Keywords": {
       "type": "text",
       "regex": "[^,]+"
@@ -49,6 +44,12 @@
     },
     "CanonicalURL": {
       "type": "string"
+    },
+    "OG_Title": {
+      "type": "string"
+    },
+    "OG_Description": {
+      "type": "text"
     }
   }
 }

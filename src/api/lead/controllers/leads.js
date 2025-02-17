@@ -17,6 +17,7 @@ module.exports = {
         phone_number,
         city,
         recaptcha_token,
+        source_url
       } = ctx.request.body;
 
       console.log(ctx.request.body);
@@ -51,6 +52,7 @@ module.exports = {
         Lead_Type: lead_type,
         utmSource: utmsource,
         SourceType: source_type,
+        SourceURL:source_url
       };
 
       if (lead_type === "Book") {

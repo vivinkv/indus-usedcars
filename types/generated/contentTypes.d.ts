@@ -668,7 +668,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    API_Status: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    API_Status: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     City: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -685,6 +685,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'Test Lead from Spiderworks Technologies'>;
     publishedAt: Schema.Attribute.DateTime;
     SourceType: Schema.Attribute.String;
+    SourceURL: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -811,7 +812,6 @@ export interface ApiOutletOutlet extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    Cars: Schema.Attribute.Relation<'oneToMany', 'api::car.car'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

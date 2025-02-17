@@ -38,11 +38,6 @@
         "images",
         "files"
       ]
-    },
-    "Cars": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::car.car"
     }
   }
 }

@@ -51,7 +51,10 @@
     },
     "API_Status": {
       "type": "boolean",
-      "default": false
+      "default": true
+    },
+    "SourceURL": {
+      "type": "string"
     }
   }
 }

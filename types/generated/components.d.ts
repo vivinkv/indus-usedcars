@@ -467,13 +467,14 @@ export interface SharedSeo extends Struct.ComponentSchema {
     Meta_Image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.Required;
     Meta_Robots: Schema.Attribute.String;
-    Meta_Social: Schema.Attribute.Component<'shared.meta-social', true>;
     Meta_Title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 60;
       }>;
     Meta_Viewport: Schema.Attribute.String;
+    OG_Description: Schema.Attribute.Text;
+    OG_Title: Schema.Attribute.String;
     Structured_Data: Schema.Attribute.JSON;
   };
 }

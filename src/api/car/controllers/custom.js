@@ -46,9 +46,6 @@ module.exports = {
               Meta_Image:{
                 populate:'*'
               },
-              Meta_Social:{
-                populate:'*'
-              }
             }
           }
         }

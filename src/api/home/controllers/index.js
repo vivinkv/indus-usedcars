@@ -45,16 +45,33 @@ module.exports = {
          }
         }
       })
-      const featuredOutlets=await strapi.documents('api::outlet.outlet').findMany({
-        filters:{
-          Featured:true
+      const featuredOutlets = await strapi.documents('api::outlet.outlet').findMany({
+        filters: {
+          Featured: true
         },
-        populate:{
-          Cars:{
-            populate:'*'
-          }
+        populate: {
+          Image: {
+            populate: '*'
+          },
         }
-      })
+      });
+
+      // Get car counts for each featured outlet
+      const outletCarCounts = await Promise.all(
+        featuredOutlets.map(async outlet => {
+          const count = await strapi.documents('api::car.car').count({
+            filters: {
+              Outlet: {
+                Name: outlet.Name
+              }
+            }
+          });
+          return {
+            ...outlet,
+            carCount: count
+          };
+        })
+      );
 
       const featuredBrands=await strapi.documents("api::brand.brand").findMany({
         filters: {
@@ -146,9 +163,6 @@ module.exports = {
               Meta_Image: {
                 populate: "*",
               },
-              Meta_Social: {
-                populate: "*",
-              },
             },
           },
         },
@@ -168,7 +182,7 @@ module.exports = {
             choose_next: chooseNextCars,
             recommended: recommendedCars,
             newlyadded: newlyadded,
-            featuredOutlets:featuredOutlets
+            featuredOutlets:outletCarCounts
           }
         }
         
