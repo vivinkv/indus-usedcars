@@ -8,7 +8,21 @@ module.exports = {
   index: async (ctx, next) => {
     try {
 
-     
+      const price=await strapi.documents('api::car.car').findMany({
+        sort: "PSP:asc",
+        limit:1
+      })
+      const minimun_price=price[0]?.PSP;
+
+      const maximumPrice=await strapi.documents('api::car.car').findMany({
+        sort: "PSP:desc",
+        limit:1
+      })
+      const maximum_price=maximumPrice[0]?.PSP;
+
+      console.log({minimun_price,maximum_price});
+      
+
       const featuredCars=await strapi.documents("api::car.car").findMany({
         filters: {
           Featured: true,
@@ -32,6 +46,9 @@ module.exports = {
         }
       })
       const featuredOutlets=await strapi.documents('api::outlet.outlet').findMany({
+        filters:{
+          featured:true
+        },
         populate:"*"
       })
 
@@ -116,13 +133,10 @@ module.exports = {
               }
             }
           },
-          
           FAQ: {
             populate: "*",
           },
-          Price:{
-            populate:"*"
-          },
+        
           SEO: {
             populate: {
               Meta_Image: {
@@ -138,6 +152,10 @@ module.exports = {
       ctx.body = {
         data:{
           ...indexPage[0],
+          Price:{
+            Minimum:minimun_price,
+            Maximum:maximum_price
+          },
           related_sections: {
             brands: featuredBrands,
             locations: featuredLocation,

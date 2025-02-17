@@ -1,13 +1,14 @@
 {
   "collectionName": "components_button_buttons",
   "info": {
-    "displayName": "Button"
+    "displayName": "Button",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "Label": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "URL": {
       "type": "string",

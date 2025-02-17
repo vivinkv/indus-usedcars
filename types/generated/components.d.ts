@@ -3,10 +3,11 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface ButtonButton extends Struct.ComponentSchema {
   collectionName: 'components_button_buttons';
   info: {
+    description: '';
     displayName: 'Button';
   };
   attributes: {
-    Label: Schema.Attribute.String & Schema.Attribute.Required;
+    Label: Schema.Attribute.String;
     URL: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'#'>;

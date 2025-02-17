@@ -25,6 +25,10 @@
       "relation": "manyToOne",
       "target": "api::location.location",
       "inversedBy": "Outlets"
+    },
+    "Featured": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

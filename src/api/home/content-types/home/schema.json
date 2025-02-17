@@ -58,12 +58,6 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
-    },
-    "Price": {
-      "displayName": "Price",
-      "type": "component",
-      "repeatable": false,
-      "component": "price.price"
     }
   }
 }
