@@ -440,6 +440,36 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCarDetailCarDetail extends Struct.SingleTypeSchema {
+  collectionName: 'car_details';
+  info: {
+    description: '';
+    displayName: 'Car Detail';
+    pluralName: 'car-details';
+    singularName: 'car-detail';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Button: Schema.Attribute.Component<'button.button', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::car-detail.car-detail'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    Section: Schema.Attribute.Component<'button.section', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCarCar extends Struct.CollectionTypeSchema {
   collectionName: 'cars';
   info: {
@@ -1475,6 +1505,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::blog.blog': ApiBlogBlog;
       'api::brand.brand': ApiBrandBrand;
+      'api::car-detail.car-detail': ApiCarDetailCarDetail;
       'api::car.car': ApiCarCar;
       'api::contact-form-ui.contact-form-ui': ApiContactFormUiContactFormUi;
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;

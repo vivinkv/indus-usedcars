@@ -9,5 +9,15 @@ module.exports = {
        middlewares: [],
      },
     },
+    {
+      method:'GET',
+      path:'/getcars/updateSlug',
+      handler:'cars.updateSlug',
+      config: {
+        auth:false,
+        policies: [],
+        middlewares: [],
+      },
+    }
   ],
 };

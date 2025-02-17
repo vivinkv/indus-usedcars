@@ -2,6 +2,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const slugify = require("slugify");
 /**
  * A set of functions called "actions" for `cars`
  */
@@ -273,6 +274,48 @@ module.exports = {
       ctx.body = {
         success: false,
         message: "Failed to import cars",
+        error: err.stack,
+      };
+    }
+  },
+  updateSlug: async (ctx, next) => {
+    try {
+      console.log('running');
+      
+      const cars = await strapi.documents("api::car.car").findMany({});
+      for (let car of cars) {
+        console.log(car);
+        
+        const slug = slugify(`${car.Name}-${car.Vehicle_Reg_No}`, {
+          replacement: "-",
+          remove: undefined,
+          lower: true,
+          strict: false,
+          locale: "vi",
+          trim: true,
+        });
+
+        if(slug==car.Slug){
+          continue;
+        }
+        console.log(slug);
+        
+        await strapi.documents("api::car.car").update({
+          documentId: car.documentId,
+          data: {
+            Slug: slug, // Use the generated slug here
+          },
+        });
+        console.log('updated');
+        
+      }
+      ctx.body={data:{
+        msg:'updated'
+      }}
+    } catch (err) {
+      ctx.body = {
+        success: false,
+        message: "Failed to update slug",
         error: err.stack,
       };
     }

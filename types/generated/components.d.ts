@@ -14,6 +14,18 @@ export interface ButtonButton extends Struct.ComponentSchema {
   };
 }
 
+export interface ButtonSection extends Struct.ComponentSchema {
+  collectionName: 'components_button_sections';
+  info: {
+    description: '';
+    displayName: 'Section';
+  };
+  attributes: {
+    Content: Schema.Attribute.String;
+    Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+  };
+}
+
 export interface CarFindMoreSection extends Struct.ComponentSchema {
   collectionName: 'components_car_find_more_sections';
   info: {
@@ -558,6 +570,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'button.button': ButtonButton;
+      'button.section': ButtonSection;
       'car.find-more-section': CarFindMoreSection;
       'car.image': CarImage;
       'car.inspection-report-section': CarInspectionReportSection;
