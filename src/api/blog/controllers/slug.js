@@ -199,18 +199,10 @@ module.exports = {
         limit: Number(limit),
         populate: {
           Featured_Image:{
-            populate:{
-              Image:{
-                populate:'*'
-              }
-            }
+            populate:'*'
           },
           Banner_Image:{
-            populate:{
-              Image:{
-                populate:'*'
-              }
-            }
+            populate:'*'
           },
           SEO: {
             populate: {
