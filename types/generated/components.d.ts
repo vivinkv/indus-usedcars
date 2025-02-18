@@ -1,5 +1,18 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlogBlogAuthor extends Struct.ComponentSchema {
+  collectionName: 'components_blog_blog_authors';
+  info: {
+    displayName: 'Blog Author';
+  };
+  attributes: {
+    Banner_At: Schema.Attribute.Date;
+    Email: Schema.Attribute.Email;
+    Email_Verified_At: Schema.Attribute.Date;
+    Name: Schema.Attribute.String;
+  };
+}
+
 export interface ButtonButton extends Struct.ComponentSchema {
   collectionName: 'components_button_buttons';
   info: {
@@ -470,20 +483,10 @@ export interface SharedSeo extends Struct.ComponentSchema {
   attributes: {
     CanonicalURL: Schema.Attribute.String;
     Keywords: Schema.Attribute.Text;
-    Meta_Description: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 160;
-        minLength: 50;
-      }>;
-    Meta_Image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
-      Schema.Attribute.Required;
+    Meta_Description: Schema.Attribute.String & Schema.Attribute.Required;
+    Meta_Image: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     Meta_Robots: Schema.Attribute.String;
-    Meta_Title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60;
-      }>;
+    Meta_Title: Schema.Attribute.String & Schema.Attribute.Required;
     Meta_Viewport: Schema.Attribute.String;
     OG_Description: Schema.Attribute.Text;
     OG_Title: Schema.Attribute.String;
@@ -570,6 +573,7 @@ export interface WidgetShorts extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blog.blog-author': BlogBlogAuthor;
       'button.button': ButtonButton;
       'button.section': ButtonSection;
       'car.find-more-section': CarFindMoreSection;

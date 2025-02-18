@@ -52,6 +52,32 @@
     "Slug": {
       "type": "uid",
       "targetField": "Title"
+    },
+    "Top_Description": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Bottom_Description": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultHtml"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "Author": {
+      "displayName": "Blog Author",
+      "type": "component",
+      "repeatable": false,
+      "component": "blog.blog-author"
+    },
+    "Short_Description": {
+      "type": "text"
+    },
+    "Primary_Heading": {
+      "type": "string"
     }
   }
 }

@@ -9,19 +9,16 @@
   "attributes": {
     "Meta_Title": {
       "required": true,
-      "type": "string",
-      "maxLength": 60
+      "type": "string"
     },
     "Meta_Description": {
       "type": "string",
-      "required": true,
-      "maxLength": 160,
-      "minLength": 50
+      "required": true
     },
     "Meta_Image": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",

@@ -1,5 +1,5 @@
-const axios=require('axios');
-'use strict';
+const axios = require("axios");
+("use strict");
 
 /**
  * A set of functions called "actions" for `slug`
@@ -8,52 +8,217 @@ const axios=require('axios');
 module.exports = {
   getBlog: async (ctx, next) => {
     try {
-      const {slug}=ctx.params;
-      const blog=await strapi.documents('api::blog.blog').findFirst({
-        filters:{
-          Slug:slug
+      const { slug } = ctx.params;
+      const blog = await strapi.documents("api::blog.blog").findFirst({
+        filters: {
+          Slug: slug,
+        },
+        populate:{ 
+          Featured_Image: {
+            populate: "*",
+          },
+          Banner_Image: {
+            populate: "*",
+          },
+          SEO: {
+            populate: {
+              Meta_Image: {
+                populate: "*",
+              },
+            },
+          },
+          Author: {
+            populate: "*",
+          },
         }
-      })
-      ctx.status=200
-      ctx.body={data:blog}
+      });
+      ctx.status = 200;
+      ctx.body = { data: blog };
     } catch (err) {
       ctx.body = err;
     }
   },
   fetchBlog: async (ctx, next) => {
     try {
-      let page=1;
-      const blogsList=await axios.get(`https://indususedcars.com/api/pages?page=${page}`);
+      console.log('blog running');
+      
+      const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
+      let blogList;
+      for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
+        blogList = await axios.get(
+          `https://indususedcars.com/api/pages?page=${i}`
+        );
 
-      for(const blog of blogsList?.data?.data){
-        if(blog?.type=='Blog'){
-          const findBlog=await strapi.documents('api::blog.blog').findFirst({
-            filters:{
-              Slug:blog?.slug
+        for (const blog of blogList?.data?.data) {
+          if (blog?.type == "Blog") {
+            const findBlog = await strapi
+              .documents("api::blog.blog")
+              .findFirst({
+                filters: {
+                  Slug: blog?.slug,
+                },
+              });
+            if (!findBlog) {
+              const blogDetail = (
+                await axios.get(
+                  `https://indususedcars.com/api/pages/${blog?.slug}`
+                )
+              ).data;
+              
+              // Helper function to upload image using Strapi's upload API
+              const uploadImage = async (filePath) => {
+                if (!filePath) return null;
+                
+                try {
+                  // Fetch image from remote URL
+                  const response = await axios.get(
+                    `https://indususedcars.com/${filePath}`,
+                    {
+                      responseType: 'arraybuffer'
+                    }
+                  );
+
+                  // Create FormData for Strapi upload
+                  const formData = new FormData();
+                  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+                  formData.append('files', blob, `image_${Date.now()}.jpg`);
+
+                  // Upload to Strapi
+                  const uploadResponse = await axios.post(
+                    `${process.env.STRAPI_URL || 'http://localhost:1337'}/api/upload`,
+                    formData,
+                    {
+                      headers: {
+                        'Content-Type': 'multipart/form-data'
+                      }
+                    }
+                  );
+
+                  // Return the first uploaded file's ID
+                  return uploadResponse.data[0]?.id || null;
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                  return null;
+                }
+              };
+
+              // Upload images with retry logic
+              const uploadWithRetry = async (filePath, retries = 3) => {
+                for (let i = 0; i < retries; i++) {
+                  const imageId = await uploadImage(filePath);
+                  if (imageId) return imageId;
+                  await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                return null;
+              };
+
+              const featuredImageId = await uploadWithRetry(blogDetail?.featured_image?.file_path);
+              const bannerImageId = await uploadWithRetry(blogDetail?.banner_image?.file_path);
+              const metaImageId = await uploadWithRetry(blogDetail?.og_image?.file_path);
+
+              // Truncate long text fields to 255 characters
+              const truncate = (str, maxLength = 255) => 
+                str && str.length > maxLength ? str.substring(0, maxLength) : str;
+
+              // Create blog data
+              const blogData = {
+                Title: truncate(blogDetail?.name),
+                Slug: truncate(blogDetail?.slug),
+                Primary_Heading: truncate(blogDetail?.primary_heading),
+                Short_Description: blogDetail?.short_description || '',
+                Content: blogDetail?.content || '',
+                Top_Description: blogDetail?.top_description || '',
+                Bottom_Description: blogDetail?.bottom_description || '',
+                Featured_Image: featuredImageId ? { id: featuredImageId } : null,
+                Banner_Image: bannerImageId ? { id: bannerImageId } : null,
+                SEO: {
+                  Meta_Title: truncate(blogDetail?.browser_title),
+                  Meta_Description: truncate(blogDetail?.meta_description),
+                  Meta_Image: metaImageId ? { id: metaImageId } : null,
+                  OG_Title: truncate(blogDetail?.og_title),
+                  OG_Description: blogDetail?.og_description || '',
+                  Keywords: truncate(blogDetail?.keywords),
+                  Meta_Robots: truncate(blogDetail?.meta_robots),
+                  Structured_Data: blogDetail?.structured_data ? JSON.parse(blogDetail.structured_data) : null,
+                  Meta_Viewport: truncate(blogDetail?.meta_viewport),
+                  Canonical_URL: truncate(blogDetail?.canonical_url),
+                },
+                Author: {
+                  Name: truncate(blogDetail?.author_details?.name),
+                  Email: truncate(blogDetail?.author_details?.email),
+                  Email_Verified_At: blogDetail?.author_details?.email_verified_at || null,
+                  Banner_At: blogDetail?.author_details?.banner_at || null,
+                },
+                publishedAt: blogDetail?.created_at || new Date()
+              };
+
+              // Create and publish the blog
+              const createdBlog = await strapi.documents("api::blog.blog").create({
+                data: blogData,
+                populate: ["Featured_Image", "Banner_Image", "SEO.Meta_Image",'Author']
+              });
+
+              console.log({createdBlog});
+              
+
+              await strapi.documents("api::blog.blog").update({
+                where: { id: createdBlog.id },
+                data: { publishedAt: blogDetail?.created_at }
+              });
             }
-          })
-          if(!findBlog){
-            const blogDetail=await axios.get(`https://indususedcars.com/api/pages/${blog?.slug}`)
-            await strapi.documents('api::blog.blog').create({
-              data:{
-                Title:blog?.name,
-                Slug:blog?.slug,
-            }})
           }
         }
-        
       }
 
-      const {slug}=ctx.params;
-      const blog=await strapi.documents('api::blog.blog').findFirst({
-        filters:{
-          Slug:slug
+      ctx.status = 200;
+      ctx.body = {
+        data: {
+          success: true,
+          msg: 'Uploaded Successfully'
         }
-      })
-      ctx.status=200
-      ctx.body={data:blog}
+      };
     } catch (err) {
-      ctx.body = err;
+      console.error('Error in fetchBlog:', err);
+      ctx.status = 500;
+      ctx.body = {
+        error: 'Internal Server Error',
+        details: err.message
+      };
     }
-  }
-};
+  },
+  blogsList: async (ctx, next) => {
+    try {
+      const { start = 0, limit = 10 } = ctx.query;
+      
+      // Get total count of blogs
+      const total = await strapi.documents("api::blog.blog").count();
+      
+      // Fetch paginated results
+      const results = await strapi.documents("api::blog.blog").findMany({
+        start: Number(start),
+        limit: Number(limit),
+        populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image', 'Author']
+      });
+
+      ctx.status = 200;
+      ctx.body = { 
+        data: results,
+        meta: {
+          pagination: {
+            firstPage: 1,
+            limit: Number(limit),
+            total: total,
+            nextStart: (Number(start) + Number(limit)) < total ? (Number(start) + Number(limit)) : null,
+            lastPage: Math.ceil(total / Number(limit))
+          }
+        }
+      };
+    } catch (err) {
+      ctx.status = 500;
+      ctx.body = {
+        error: 'Internal Server Error',
+        details: err.message
+      };
+    }
+}
+}

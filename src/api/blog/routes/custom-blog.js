@@ -1,14 +1,37 @@
-'use strict'
+"use strict";
 
-module.exports={
-    routes:[{
-        method:'GET',
-        path:'/blogs/:slug',
-        handler:'slug.getBlog',
-        config:{
-            auth:false,
-            policies:[],
-            middleware:[]
-        }
-    }]
-}
+module.exports = {
+  routes: [
+    {
+        method: "GET",
+        path: "/blogs/list",
+        handler: "slug.blogsList",
+        config: {
+          auth: false,
+          policies: [],
+          middleware: [],
+        },
+      },
+    {
+      method: "GET",
+      path: "/blogs/fetchBlogs",
+      handler: "slug.fetchBlog",
+      config: {
+        auth: false,
+        policies: [],
+        middleware: [],
+      },
+    },
+    {
+      method: "GET",
+      path: "/blogs/:slug",
+      handler: "slug.getBlog",
+      config: {
+        auth: false,
+        policies: [],
+        middleware: [],
+      },
+    },
+
+  ],
+};
