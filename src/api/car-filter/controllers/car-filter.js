@@ -176,6 +176,9 @@ module.exports = {
           Benefit_Section:{
             populate:'*'
           },
+          FAQ:{
+            populate:'*'
+          },
           SEO:{
             populate:{
               Meta_Image:{

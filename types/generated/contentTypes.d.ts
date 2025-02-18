@@ -804,6 +804,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
       'offer.exclusive-deals-section',
       true
     >;
+    FAQ: Schema.Attribute.Component<'common.faq', false>;
     Featured: Schema.Attribute.Boolean;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

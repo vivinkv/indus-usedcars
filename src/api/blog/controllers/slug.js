@@ -41,7 +41,54 @@ module.exports = {
   fetchBlog: async (ctx, next) => {
     try {
       console.log("blog running");
+        // Helper function to upload image using Strapi's upload API
+        const uploadImage = async (filePath) => {
+          if (!filePath) return null;
 
+          try {
+            // Fetch image from remote URL
+            const response = await axios.get(
+              `https://indususedcars.com/${filePath}`,
+              {
+                responseType: "arraybuffer",
+              }
+            );
+
+            // Create FormData for Strapi upload
+            const formData = new FormData();
+            const blob = new Blob([response.data], {
+              type: response.headers["content-type"],
+            });
+            formData.append("files", blob, `image_${Date.now()}.jpg`);
+
+            // Upload to Strapi
+            const uploadResponse = await axios.post(
+              `${process.env.STRAPI_URL || "http://localhost:1337"}/api/upload`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
+
+            // Return the first uploaded file's ID
+            return uploadResponse.data[0]?.id || null;
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            return null;
+          }
+        };
+
+        // Upload images with retry logic
+        const uploadWithRetry = async (filePath, retries = 3) => {
+          for (let i = 0; i < retries; i++) {
+            const imageId = await uploadImage(filePath);
+            if (imageId) return imageId;
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+          return null;
+        };
       const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
       let blogList;
       for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
@@ -67,54 +114,7 @@ module.exports = {
                 )
               ).data;
 
-              // Helper function to upload image using Strapi's upload API
-              const uploadImage = async (filePath) => {
-                if (!filePath) return null;
-
-                try {
-                  // Fetch image from remote URL
-                  const response = await axios.get(
-                    `https://indususedcars.com/${filePath}`,
-                    {
-                      responseType: "arraybuffer",
-                    }
-                  );
-
-                  // Create FormData for Strapi upload
-                  const formData = new FormData();
-                  const blob = new Blob([response.data], {
-                    type: response.headers["content-type"],
-                  });
-                  formData.append("files", blob, `image_${Date.now()}.jpg`);
-
-                  // Upload to Strapi
-                  const uploadResponse = await axios.post(
-                    `${process.env.STRAPI_URL || "http://localhost:1337"}/api/upload`,
-                    formData,
-                    {
-                      headers: {
-                        "Content-Type": "multipart/form-data",
-                      },
-                    }
-                  );
-
-                  // Return the first uploaded file's ID
-                  return uploadResponse.data[0]?.id || null;
-                } catch (error) {
-                  console.error("Error uploading image:", error);
-                  return null;
-                }
-              };
-
-              // Upload images with retry logic
-              const uploadWithRetry = async (filePath, retries = 3) => {
-                for (let i = 0; i < retries; i++) {
-                  const imageId = await uploadImage(filePath);
-                  if (imageId) return imageId;
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                }
-                return null;
-              };
+            
 
               const featuredImageId = await uploadWithRetry(
                 blogDetail?.featured_image?.file_path
@@ -174,6 +174,7 @@ module.exports = {
                 .documents("api::blog.blog")
                 .create({
                   data: blogData,
+                  status:'published',
                   populate: [
                     "Featured_Image",
                     "Banner_Image",
@@ -191,9 +192,52 @@ module.exports = {
             } else {
               console.log(findBlog);
 
-              await strapi.documents("api::blog.blog").publish({
-                documentId: findBlog?.documentId,
-              });
+              // Check and update images if needed
+              // const blogToUpdate = await strapi.documents("api::blog.blog").findFirst({
+              //   where: { id: findBlog.id },
+              //   populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image']
+              // });
+
+              // const updateData = {};
+
+              // // Check and handle Featured_Image
+              // if (!blogToUpdate.Featured_Image) {
+              //   const featuredImageId = await downloadAndUploadImage(findBlog?.featured_image_url);
+              //   if (featuredImageId) {
+              //     updateData.Featured_Image = { id: featuredImageId };
+              //   }
+              // }
+
+              // // Check and handle Banner_Image
+              // if (!blogToUpdate.Banner_Image) {
+              //   const bannerImageId = await downloadAndUploadImage(findBlog?.banner_image_url);
+              //   if (bannerImageId) {
+              //     updateData.Banner_Image = { id: bannerImageId };
+              //   }
+              // }
+
+              // // Check and handle SEO.Meta_Image
+              // if (!blogToUpdate.SEO?.Meta_Image) {
+              //   const metaImageId = await downloadAndUploadImage(findBlog?.meta_image_url);
+              //   if (metaImageId) {
+              //     updateData.SEO = {
+              //       ...blogToUpdate.SEO,
+              //       Meta_Image: { id: metaImageId }
+              //     };
+              //   }
+              // }
+
+              // // Update blog if any images were missing
+              // if (Object.keys(updateData).length > 0) {
+              //   await strapi.documents("api::blog.blog").update({
+              //     where: { id: findBlog.id },
+              //     data: updateData
+              //   });
+              // }
+
+              // await strapi.documents("api::blog.blog").publish({
+              //   documentId: findBlog?.documentId,
+              // });
               console.log("done");
             }
           }
@@ -280,10 +324,18 @@ module.exports = {
 
       for(const blog of blogs){
         console.log({blog});
-        
-        await strapi.documents('api::blog.blog').publish({
-          documentId:blog.documentId
+        // const updatedBlog=await strapi.documents('api::blog.blog').update({
+        //   data:{
+        //     publishedAt:new Date()
+        //   },
+        //   status:'published'
+        // })
+        const updatedBlog=await strapi.documents('api::blog.blog').publish({
+          documentId:blog.documentId,
+          status:'published'
         })
+        console.log({updatedBlog});
+        
       }
 
       ctx.body={

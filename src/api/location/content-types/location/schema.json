@@ -77,6 +77,11 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
+    },
+    "FAQ": {
+      "type": "component",
+      "repeatable": false,
+      "component": "common.faq"
     }
   }
 }
