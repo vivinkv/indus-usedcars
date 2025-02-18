@@ -197,7 +197,32 @@ module.exports = {
       const results = await strapi.documents("api::blog.blog").findMany({
         start: Number(start),
         limit: Number(limit),
-        populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image', 'Author']
+        populate: {
+          Featured_Image:{
+            populate:{
+              Image:{
+                populate:'*'
+              }
+            }
+          },
+          Banner_Image:{
+            populate:{
+              Image:{
+                populate:'*'
+              }
+            }
+          },
+          SEO: {
+            populate: {
+              Meta_Image: {
+                populate: "*",
+              },
+            },
+          },
+          Author: {
+            populate: "*",
+          }, 
+        }
       });
 
       ctx.status = 200;
