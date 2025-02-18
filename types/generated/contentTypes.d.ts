@@ -816,6 +816,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     Outlets: Schema.Attribute.Relation<'oneToMany', 'api::outlet.outlet'>;
     Place: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     Slug: Schema.Attribute.UID<'Place'> & Schema.Attribute.Required;
     Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;

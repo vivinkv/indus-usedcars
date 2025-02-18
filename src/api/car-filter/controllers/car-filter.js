@@ -156,7 +156,45 @@ module.exports = {
       ctx.body = error;
     }
   },
+  staticContent:async(ctx,next)=>{
+    try {
+      const {location}=ctx.params;
+      const static_content=await strapi.documents('api::location.location').findFirst({
+        filters:{
+          Slug:location
+        },
+        populate:{
+          Offer_Section:{
+            populate:'*'
+          },
+          Exclusive_Section:{
+            populate:'*'
+          },
+          Assurance_Section:{
+            populate:'*'
+          },
+          Benefit_Section:{
+            populate:'*'
+          },
+          SEO:{
+            populate:{
+              Meta_Image:{
+                populate:'*'
+              }
+            }
+          }
+        }
+      })
 
+      ctx.status=200;
+      ctx.body={
+        data:static_content
+      }
+    } catch (error) {
+        ctx.status=500;
+        ctx.body=error
+    }
+  },
   filterCars: async (ctx, next) => {
     try {
       const { location } = ctx.params;
@@ -207,7 +245,11 @@ module.exports = {
           $lte: parseInt(price), // Filter for price less than or equal to selected
         };
       }
-
+      const locationPage=await strapi.documents('api::location.location').findFirst({
+        filters:{
+          Slug:location
+        }
+      })
       // Fetch cars with dynamic filters and pagination
       const [cars, count] = await Promise.all([
         strapi.documents("api::car.car").findMany({

@@ -12,6 +12,16 @@ module.exports = {
           middleware: [],
         },
       },
+      {
+        method: "GET",
+        path: "/blogs/update",
+        handler: "slug.updateBlogStatus",
+        config: {
+          auth: false,
+          policies: [], 
+          middleware: [],
+        },
+      },
     {
       method: "GET",
       path: "/blogs/fetchBlogs",

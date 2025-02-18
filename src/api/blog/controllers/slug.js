@@ -13,7 +13,7 @@ module.exports = {
         filters: {
           Slug: slug,
         },
-        populate:{ 
+        populate: {
           Featured_Image: {
             populate: "*",
           },
@@ -30,7 +30,7 @@ module.exports = {
           Author: {
             populate: "*",
           },
-        }
+        },
       });
       ctx.status = 200;
       ctx.body = { data: blog };
@@ -40,8 +40,8 @@ module.exports = {
   },
   fetchBlog: async (ctx, next) => {
     try {
-      console.log('blog running');
-      
+      console.log("blog running");
+
       const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
       let blogList;
       for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
@@ -59,45 +59,49 @@ module.exports = {
                 },
               });
             if (!findBlog) {
+              console.log("yes");
+
               const blogDetail = (
                 await axios.get(
                   `https://indususedcars.com/api/pages/${blog?.slug}`
                 )
               ).data;
-              
+
               // Helper function to upload image using Strapi's upload API
               const uploadImage = async (filePath) => {
                 if (!filePath) return null;
-                
+
                 try {
                   // Fetch image from remote URL
                   const response = await axios.get(
                     `https://indususedcars.com/${filePath}`,
                     {
-                      responseType: 'arraybuffer'
+                      responseType: "arraybuffer",
                     }
                   );
 
                   // Create FormData for Strapi upload
                   const formData = new FormData();
-                  const blob = new Blob([response.data], { type: response.headers['content-type'] });
-                  formData.append('files', blob, `image_${Date.now()}.jpg`);
+                  const blob = new Blob([response.data], {
+                    type: response.headers["content-type"],
+                  });
+                  formData.append("files", blob, `image_${Date.now()}.jpg`);
 
                   // Upload to Strapi
                   const uploadResponse = await axios.post(
-                    `${process.env.STRAPI_URL || 'http://localhost:1337'}/api/upload`,
+                    `${process.env.STRAPI_URL || "http://localhost:1337"}/api/upload`,
                     formData,
                     {
                       headers: {
-                        'Content-Type': 'multipart/form-data'
-                      }
+                        "Content-Type": "multipart/form-data",
+                      },
                     }
                   );
 
                   // Return the first uploaded file's ID
                   return uploadResponse.data[0]?.id || null;
                 } catch (error) {
-                  console.error('Error uploading image:', error);
+                  console.error("Error uploading image:", error);
                   return null;
                 }
               };
@@ -107,64 +111,90 @@ module.exports = {
                 for (let i = 0; i < retries; i++) {
                   const imageId = await uploadImage(filePath);
                   if (imageId) return imageId;
-                  await new Promise(resolve => setTimeout(resolve, 1000));
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                 }
                 return null;
               };
 
-              const featuredImageId = await uploadWithRetry(blogDetail?.featured_image?.file_path);
-              const bannerImageId = await uploadWithRetry(blogDetail?.banner_image?.file_path);
-              const metaImageId = await uploadWithRetry(blogDetail?.og_image?.file_path);
+              const featuredImageId = await uploadWithRetry(
+                blogDetail?.featured_image?.file_path
+              );
+              const bannerImageId = await uploadWithRetry(
+                blogDetail?.banner_image?.file_path
+              );
+              const metaImageId = await uploadWithRetry(
+                blogDetail?.og_image?.file_path
+              );
 
               // Truncate long text fields to 255 characters
-              const truncate = (str, maxLength = 255) => 
-                str && str.length > maxLength ? str.substring(0, maxLength) : str;
+              const truncate = (str, maxLength = 255) =>
+                str && str.length > maxLength
+                  ? str.substring(0, maxLength)
+                  : str;
 
               // Create blog data
               const blogData = {
                 Title: truncate(blogDetail?.name),
                 Slug: truncate(blogDetail?.slug),
                 Primary_Heading: truncate(blogDetail?.primary_heading),
-                Short_Description: blogDetail?.short_description || '',
-                Content: blogDetail?.content || '',
-                Top_Description: blogDetail?.top_description || '',
-                Bottom_Description: blogDetail?.bottom_description || '',
-                Featured_Image: featuredImageId ? { id: featuredImageId } : null,
+                Short_Description: blogDetail?.short_description || "",
+                Content: blogDetail?.content || "",
+                Top_Description: blogDetail?.top_description || "",
+                Bottom_Description: blogDetail?.bottom_description || "",
+                Featured_Image: featuredImageId
+                  ? { id: featuredImageId }
+                  : null,
                 Banner_Image: bannerImageId ? { id: bannerImageId } : null,
                 SEO: {
                   Meta_Title: truncate(blogDetail?.browser_title),
                   Meta_Description: truncate(blogDetail?.meta_description),
                   Meta_Image: metaImageId ? { id: metaImageId } : null,
                   OG_Title: truncate(blogDetail?.og_title),
-                  OG_Description: blogDetail?.og_description || '',
+                  OG_Description: blogDetail?.og_description || "",
                   Keywords: truncate(blogDetail?.keywords),
                   Meta_Robots: truncate(blogDetail?.meta_robots),
-                  Structured_Data: blogDetail?.structured_data ? JSON.parse(blogDetail.structured_data) : null,
+                  Structured_Data: blogDetail?.structured_data
+                    ? JSON.parse(blogDetail.structured_data)
+                    : null,
                   Meta_Viewport: truncate(blogDetail?.meta_viewport),
                   Canonical_URL: truncate(blogDetail?.canonical_url),
                 },
                 Author: {
                   Name: truncate(blogDetail?.author_details?.name),
                   Email: truncate(blogDetail?.author_details?.email),
-                  Email_Verified_At: blogDetail?.author_details?.email_verified_at || null,
+                  Email_Verified_At:
+                    blogDetail?.author_details?.email_verified_at || null,
                   Banner_At: blogDetail?.author_details?.banner_at || null,
                 },
-                publishedAt: blogDetail?.created_at || new Date()
+                publishedAt: blogDetail?.created_at || new Date(),
               };
 
               // Create and publish the blog
-              const createdBlog = await strapi.documents("api::blog.blog").create({
-                data: blogData,
-                populate: ["Featured_Image", "Banner_Image", "SEO.Meta_Image",'Author']
-              });
+              const createdBlog = await strapi
+                .documents("api::blog.blog")
+                .create({
+                  data: blogData,
+                  populate: [
+                    "Featured_Image",
+                    "Banner_Image",
+                    "SEO.Meta_Image",
+                    "Author",
+                  ],
+                });
 
-              console.log({createdBlog});
-              
+              console.log({ createdBlog });
 
               await strapi.documents("api::blog.blog").update({
                 where: { id: createdBlog.id },
-                data: { publishedAt: blogDetail?.created_at }
+                data: { publishedAt: blogDetail?.created_at },
               });
+            } else {
+              console.log(findBlog);
+
+              await strapi.documents("api::blog.blog").publish({
+                documentId: findBlog?.documentId,
+              });
+              console.log("done");
             }
           }
         }
@@ -174,35 +204,36 @@ module.exports = {
       ctx.body = {
         data: {
           success: true,
-          msg: 'Uploaded Successfully'
-        }
+          msg: "Uploaded Successfully",
+        },
       };
     } catch (err) {
-      console.error('Error in fetchBlog:', err);
+      console.error("Error in fetchBlog:", err);
       ctx.status = 500;
       ctx.body = {
-        error: 'Internal Server Error',
-        details: err.message
+        error: "Internal Server Error",
+        details: err.message,
       };
     }
   },
   blogsList: async (ctx, next) => {
     try {
       const { start = 0, limit = 10 } = ctx.query;
-      
+
       // Get total count of blogs
       const total = await strapi.documents("api::blog.blog").count();
-      
+
       // Fetch paginated results
       const results = await strapi.documents("api::blog.blog").findMany({
         start: Number(start),
         limit: Number(limit),
+        status: "published",
         populate: {
-          Featured_Image:{
-            populate:'*'
+          Featured_Image: {
+            populate: "*",
           },
-          Banner_Image:{
-            populate:'*'
+          Banner_Image: {
+            populate: "*",
           },
           SEO: {
             populate: {
@@ -213,29 +244,61 @@ module.exports = {
           },
           Author: {
             populate: "*",
-          }, 
-        }
+          },
+        },
       });
 
       ctx.status = 200;
-      ctx.body = { 
+      ctx.body = {
         data: results,
         meta: {
           pagination: {
             firstPage: 1,
             limit: Number(limit),
             total: total,
-            nextStart: (Number(start) + Number(limit)) < total ? (Number(start) + Number(limit)) : null,
-            lastPage: Math.ceil(total / Number(limit))
-          }
-        }
+            nextStart:
+              Number(start) + Number(limit) < total
+                ? Number(start) + Number(limit)
+                : null,
+            lastPage: Math.ceil(total / Number(limit)),
+          },
+        },
       };
     } catch (err) {
       ctx.status = 500;
       ctx.body = {
-        error: 'Internal Server Error',
-        details: err.message
+        error: "Internal Server Error",
+        details: err.message,
       };
     }
+  },
+  updateBlogStatus: async (ctx, next) => {
+    try {
+      const blogs=await strapi.documents('api::blog.blog').findMany({
+        status:'draft'
+      })
+
+      for(const blog of blogs){
+        console.log({blog});
+        
+        await strapi.documents('api::blog.blog').publish({
+          documentId:blog.documentId
+        })
+      }
+
+      ctx.body={
+        data:{
+          success:true,
+          msg:'Updated Successfully'
+        }
+      }
+    }
+    catch (err) {
+      ctx.status = 500;
+      ctx.body = {
+        error: "Internal Server Error",
+        details: err.message,
+      };
+}
 }
 }

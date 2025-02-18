@@ -19,7 +19,18 @@ module.exports = {
         policies: [],
         middlewares: [],
       },
-    },{
+    },
+    {
+      method: 'GET',
+      path: '/car-filter/static-content/:location',
+      handler: 'car-filter.staticContent',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
       method: 'GET',
       path: '/car-filter/filter/:location',
       handler: 'car-filter.filterCars',

@@ -72,6 +72,11 @@
     },
     "Featured": {
       "type": "boolean"
+    },
+    "SEO": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
     }
   }
 }
