@@ -32,6 +32,13 @@ module.exports = {
           },
         },
       });
+
+      if (!blog) {
+        ctx.status = 404;
+        ctx.body = { error: "Blog not found" };
+        return;
+      }
+
       ctx.status = 200;
       ctx.body = { data: blog };
     } catch (err) {
