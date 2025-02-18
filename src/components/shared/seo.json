@@ -12,7 +12,7 @@
       "type": "string"
     },
     "Meta_Description": {
-      "type": "string",
+      "type": "text",
       "required": true
     },
     "Meta_Image": {

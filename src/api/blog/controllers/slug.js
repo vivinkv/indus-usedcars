@@ -55,7 +55,7 @@ module.exports = {
           try {
             // Fetch image from remote URL
             const response = await axios.get(
-              `https://indususedcars.com/${filePath}`,
+              `https://indususedcars.com/${filePath.replaceAll(/ /g, '%20')}`,
               {
                 responseType: "arraybuffer",
               }
@@ -111,6 +111,7 @@ module.exports = {
                 filters: {
                   Slug: blog?.slug,
                 },
+                populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image']
               });
             if (!findBlog) {
               console.log("yes");
@@ -120,8 +121,6 @@ module.exports = {
                   `https://indususedcars.com/api/pages/${blog?.slug}`
                 )
               ).data;
-
-            
 
               const featuredImageId = await uploadWithRetry(
                 blogDetail?.featured_image?.file_path
@@ -200,51 +199,54 @@ module.exports = {
               console.log(findBlog);
 
               // Check and update images if needed
-              // const blogToUpdate = await strapi.documents("api::blog.blog").findFirst({
-              //   where: { id: findBlog.id },
-              //   populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image']
-              // });
+              const updateData = {};
 
-              // const updateData = {};
+              // Check and handle Featured_Image
+              if (!findBlog.Featured_Image) {
+                console.log('yes');
+                
+                const featuredImageId = await uploadWithRetry(blog?.featured_image?.file_path);
+                if (featuredImageId) {
+                  updateData.Featured_Image = { id: featuredImageId };
+                }
+              }
 
-              // // Check and handle Featured_Image
-              // if (!blogToUpdate.Featured_Image) {
-              //   const featuredImageId = await downloadAndUploadImage(findBlog?.featured_image_url);
-              //   if (featuredImageId) {
-              //     updateData.Featured_Image = { id: featuredImageId };
-              //   }
-              // }
+              // Check and handle Banner_Image
+              if (!findBlog.Banner_Image) {
+                console.log('yes');
+                const bannerImageId = await uploadWithRetry(blog?.banner_image?.file_path);
+                if (bannerImageId) {
+                  updateData.Banner_Image = { id: bannerImageId };
+                }
+              }
 
-              // // Check and handle Banner_Image
-              // if (!blogToUpdate.Banner_Image) {
-              //   const bannerImageId = await downloadAndUploadImage(findBlog?.banner_image_url);
-              //   if (bannerImageId) {
-              //     updateData.Banner_Image = { id: bannerImageId };
-              //   }
-              // }
+              // Check and handle SEO.Meta_Image
+              if (!findBlog.SEO?.Meta_Image) {
+                console.log('yes');
+                const metaImageId = await uploadWithRetry(blog?.og_image?.file_path);
+                if (metaImageId) {
+                  updateData.SEO = {
+                    ...findBlog.SEO,
+                    Meta_Image: { id: metaImageId }
+                  };
+                }
+              }
 
-              // // Check and handle SEO.Meta_Image
-              // if (!blogToUpdate.SEO?.Meta_Image) {
-              //   const metaImageId = await downloadAndUploadImage(findBlog?.meta_image_url);
-              //   if (metaImageId) {
-              //     updateData.SEO = {
-              //       ...blogToUpdate.SEO,
-              //       Meta_Image: { id: metaImageId }
-              //     };
-              //   }
-              // }
+              // Update blog if any images were missing
+              console.log(Object.keys(updateData).length > 0,Object.keys(updateData));
+              
+              if (Object.keys(updateData).length > 0) {
+                console.log('yes inside update');
+                
+                await strapi.documents("api::blog.blog").update({
+                  id: findBlog.id,
+                  data: updateData,
+                  status:'published'
+                });
+              }
 
-              // // Update blog if any images were missing
-              // if (Object.keys(updateData).length > 0) {
-              //   await strapi.documents("api::blog.blog").update({
-              //     where: { id: findBlog.id },
-              //     data: updateData
-              //   });
-              // }
+            
 
-              // await strapi.documents("api::blog.blog").publish({
-              //   documentId: findBlog?.documentId,
-              // });
               console.log("done");
             }
           }
