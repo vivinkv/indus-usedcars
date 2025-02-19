@@ -50,8 +50,10 @@ module.exports = {
       console.log("blog running");
         // Helper function to upload image using Strapi's upload API
         const uploadImage = async (filePath) => {
+          console.log(filePath);
           if (!filePath) return null;
-
+          console.log(`${filePath.replaceAll(/ /g, '%20')}`);
+          
           try {
             // Fetch image from remote URL
             const response = await axios.get(
@@ -98,7 +100,7 @@ module.exports = {
         };
       const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
       let blogList;
-      for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
+      for (let i = 1; i <= blogsCount?.data?.last_page; i++) { 
         blogList = await axios.get(
           `https://indususedcars.com/api/pages?page=${i}`
         );
@@ -204,45 +206,90 @@ module.exports = {
               // Check and handle Featured_Image
               if (!findBlog.Featured_Image) {
                 console.log('yes');
+                console.log(blog?.featured_image?.file_path);
                 
-                const featuredImageId = await uploadWithRetry(blog?.featured_image?.file_path);
+                
+                const blogDetail = (
+                  await axios.get(
+                    `https://indususedcars.com/api/pages/${blog?.slug}`
+                  )
+                ).data;
+               
+                const featuredImageId = await uploadWithRetry(
+                  blogDetail?.featured_image?.file_path
+                );
+                console.log(featuredImageId);
+                
                 if (featuredImageId) {
+                  console.log('yes insider');
+                  
                   updateData.Featured_Image = { id: featuredImageId };
                 }
+                console.log('end');
+                
               }
 
               // Check and handle Banner_Image
               if (!findBlog.Banner_Image) {
                 console.log('yes');
-                const bannerImageId = await uploadWithRetry(blog?.banner_image?.file_path);
+                console.log(blog?.banner_image?.file_path);
+                
+                const blogDetail = (
+                  await axios.get(
+                    `https://indususedcars.com/api/pages/${blog?.slug}`
+                  )
+                ).data;
+               
+                const bannerImageId = await uploadWithRetry(
+                  blogDetail?.banner_image?.file_path
+                );
+                console.log(bannerImageId);
+                
+               
                 if (bannerImageId) {
+                  console.log('yes insider');
                   updateData.Banner_Image = { id: bannerImageId };
                 }
+                console.log('end');
               }
 
               // Check and handle SEO.Meta_Image
               if (!findBlog.SEO?.Meta_Image) {
-                console.log('yes');
-                const metaImageId = await uploadWithRetry(blog?.og_image?.file_path);
+               
+                console.log(blog?.og_image?.file_path);
+                const blogDetail = (
+                  await axios.get(
+                    `https://indususedcars.com/api/pages/${blog?.slug}`
+                  )
+                ).data;
+                const metaImageId = await uploadWithRetry(
+                  blogDetail?.og_image?.file_path
+                );
+                console.log(metaImageId);
+                
                 if (metaImageId) {
+                  
                   updateData.SEO = {
                     ...findBlog.SEO,
                     Meta_Image: { id: metaImageId }
                   };
                 }
+               
               }
 
               // Update blog if any images were missing
               console.log(Object.keys(updateData).length > 0,Object.keys(updateData));
               
               if (Object.keys(updateData).length > 0) {
-                console.log('yes inside update');
+              
                 
-                await strapi.documents("api::blog.blog").update({
-                  id: findBlog.id,
+               const updatedBlog= await strapi.documents("api::blog.blog").update({
+                  documentId: findBlog.documentId,
                   data: updateData,
                   status:'published'
                 });
+                console.log({updatedBlog});
+                
               }
 
             

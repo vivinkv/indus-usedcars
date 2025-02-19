@@ -529,6 +529,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<100000>;
     Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     Choose_Next: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Color: Schema.Attribute.String;

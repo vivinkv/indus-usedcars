@@ -234,18 +234,24 @@ module.exports = {
         filters.Transmission_Type = transmission;
       }
       if (year) {
+        console.log(year);
+        const years=JSON.parse(year);
         filters.Year_Of_Month = {
-          $lte: parseInt(year), // Filter for years less than or equal to selected
+          $between: [parseInt(years[0]), parseInt(years[1])]
         };
       }
       if (kilometers) {
+        const km=JSON.parse(kilometers);
         filters.Kilometers = {
-          $lte: parseInt(kilometers), // Filter for kilometers less than or equal to selected
-        };
+          $between: [parseInt(km[0]), parseInt(km[1])]
+        }; 
       }
       if (price) {
-        filters.PSP = {
-          $lte: parseInt(price), // Filter for price less than or equal to selected
+        const prices=JSON.parse(price);
+        console.log(typeof prices[0].toString(),prices[1].toFixed(2).toString()); 
+        
+        filters.Amount = {
+          $between: [parseFloat(prices[0]), parseFloat(prices[1])]
         };
       }
       const locationPage=await strapi.documents('api::location.location').findFirst({
@@ -253,6 +259,11 @@ module.exports = {
           Slug:location
         }
       })
+      if (!locationPage) {
+        ctx.status = 404;
+        ctx.body = { error: 'Location not found' };
+        return;
+      }
       // Fetch cars with dynamic filters and pagination
       const [cars, count] = await Promise.all([
         strapi.documents("api::car.car").findMany({
