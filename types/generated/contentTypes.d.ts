@@ -857,6 +857,7 @@ export interface ApiMenuMenu extends Struct.SingleTypeSchema {
 export interface ApiModelModel extends Struct.CollectionTypeSchema {
   collectionName: 'models';
   info: {
+    description: '';
     displayName: 'Model';
     pluralName: 'models';
     singularName: 'model';
@@ -865,15 +866,40 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Bottom_Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Extra_JS: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    FAQ: Schema.Attribute.Component<'common.faq', false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::model.model'> &
       Schema.Attribute.Private;
     Name: Schema.Attribute.String & Schema.Attribute.Required;
+    Page_Heading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    Related_Type: Schema.Attribute.String;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     Slug: Schema.Attribute.UID<'Name'>;
+    Top_Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
