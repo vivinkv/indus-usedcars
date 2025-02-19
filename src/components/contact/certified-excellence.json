@@ -9,13 +9,6 @@
     "Title": {
       "type": "string"
     },
-    "Content": {
-      "type": "customField",
-      "options": {
-        "preset": "defaultHtml"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    },
     "Image": {
       "type": "media",
       "multiple": false,
@@ -35,6 +28,12 @@
       "type": "component",
       "repeatable": true,
       "component": "button.button"
+    },
+    "Short_Title": {
+      "type": "string"
+    },
+    "Short_Description": {
+      "type": "text"
     }
   }
 }

@@ -182,15 +182,10 @@ export interface ContactCertifiedExcellence extends Struct.ComponentSchema {
   };
   attributes: {
     Button: Schema.Attribute.Component<'button.button', true>;
-    Content: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
     Image: Schema.Attribute.Media<'images' | 'files'>;
     Image_Section: Schema.Attribute.Component<'contact.image-section', true>;
+    Short_Description: Schema.Attribute.Text;
+    Short_Title: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
