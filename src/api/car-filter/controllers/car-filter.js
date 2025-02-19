@@ -219,20 +219,57 @@ module.exports = {
       }
 
       if (fuel) {
-        filters.Fuel_Type = {
-          Name: fuel,
-        };
+        try {
+          // Remove brackets and split by comma
+          const cleanedFuel = fuel.replace(/[\[\]{}]/g, '');
+          const fuelArray = cleanedFuel.split(',').map(f => f.trim());
+          
+          if (fuelArray.length > 0) {
+            filters.Fuel_Type = {
+              Name: {
+                $in: fuelArray,
+              }
+            };
+          }
+        } catch (error) {
+          console.error('Error parsing fuel filter:', error);
+        }
       }
+
       if (brand) {
-        filters.Brand = {
-          Name: {
-            $containsi: brand,
-          },
-        };
+        try {
+          // Remove brackets and split by comma
+          const cleanedBrand = brand.replace(/[\[\]{}]/g, '');
+          const brandArray = cleanedBrand.split(',').map(b => b.trim());
+          
+          if (brandArray.length > 0) {
+            filters.Brand = {
+              Name: {
+                $in: brandArray,
+              },
+            };
+          }
+        } catch (error) {
+          console.error('Error parsing brand filter:', error);
+        }
       }
+
       if (transmission) {
-        filters.Transmission_Type = transmission;
+        try {
+          // Remove brackets and split by comma
+          const cleanedTransmission = transmission.replace(/[\[\]{}]/g, '');
+          const transmissionArray = cleanedTransmission.split(',').map(t => t.trim());
+          
+          if (transmissionArray.length > 0) {
+            filters.Transmission_Type = {
+              $in: transmissionArray
+            };
+          }
+        } catch (error) {
+          console.error('Error parsing transmission filter:', error);
+        }
       }
+
       if (year) {
         console.log(year);
         const years=JSON.parse(year);
