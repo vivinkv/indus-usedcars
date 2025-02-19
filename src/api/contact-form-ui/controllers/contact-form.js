@@ -19,6 +19,9 @@ module.exports = {
                       populate:'*'
                     }
                   }
+                },
+                Button:{
+                  populate:'*'
                 }
               }
             }

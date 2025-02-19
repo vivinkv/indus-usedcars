@@ -39,6 +39,16 @@ module.exports = {
         policies: [],
         middlewares: [],
       },
+    },
+    {
+      method: 'GET',
+      path: '/car-filter/amount',
+      handler: 'car-filter.updateamount',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
     }
   ],
 };

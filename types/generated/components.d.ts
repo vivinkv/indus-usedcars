@@ -177,9 +177,11 @@ export interface CommonQuestions extends Struct.ComponentSchema {
 export interface ContactCertifiedExcellence extends Struct.ComponentSchema {
   collectionName: 'components_contact_certified_excellences';
   info: {
+    description: '';
     displayName: 'Certified Excellence';
   };
   attributes: {
+    Button: Schema.Attribute.Component<'button.button', true>;
     Content: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',

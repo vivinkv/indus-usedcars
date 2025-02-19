@@ -237,21 +237,21 @@ module.exports = {
         console.log(year);
         const years=JSON.parse(year);
         filters.Year_Of_Month = {
-          $between: [parseInt(years[0]), parseInt(years[1])]
+          $between: [years[0], years[1]]
         };
       }
       if (kilometers) {
         const km=JSON.parse(kilometers);
         filters.Kilometers = {
-          $between: [parseInt(km[0]), parseInt(km[1])]
+          $between: [km[0], km[1]]
         }; 
       }
       if (price) {
         const prices=JSON.parse(price);
         console.log(typeof prices[0].toString(),prices[1].toFixed(2).toString()); 
-        
+         
         filters.Amount = {
-          $between: [parseFloat(prices[0]), parseFloat(prices[1])]
+          $between: [prices[0], prices[1]]
         };
       }
       const locationPage=await strapi.documents('api::location.location').findFirst({
@@ -295,4 +295,30 @@ module.exports = {
       ctx.body = error;
     }
   },
+  updateamount:async(ctx,next)=>{
+    try {
+      const {id,amount}=ctx.params;
+      const cars=await strapi.documents('api::car.car').findMany({});
+      for(const car of cars ){
+        const carUpdate=await strapi.documents('api::car.car').update({
+          documentId:car.documentId,
+          data:{Amount:car.PSP},
+          status:'published'
+        });
+        console.log(carUpdate);
+        
+      }
+     
+      ctx.status=200;
+      ctx.body={
+        data:{
+          success:true,
+          msg:'Updated Successfully'
+        }
+      }
+    } catch (error) {
+      ctx.status=500;
+      ctx.body=error
+    }
+  }
 };
