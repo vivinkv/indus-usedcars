@@ -101,7 +101,7 @@ module.exports = {
         Fuels = await strapi.documents("api::fuel-type.fuel-type").findMany({
           Location: {
             Slug: {
-              $eq: ctx?.query?.location,
+              $eq: ctx?.query?.location, 
             },
           },
           populate: "*",
@@ -193,7 +193,7 @@ module.exports = {
   },
   searchBrand: async (ctx, next) => {
     try {
-      const { search, page = 1, limit = 10,location } = ctx.query;
+      const { search, page = 1, limit = 10 } = ctx.query;
       const pagination = {
         page: parseInt(page),
         pageSize: parseInt(limit),
@@ -205,13 +205,6 @@ module.exports = {
       let brand;
       if (!search) {
         brand = await strapi.documents("api::brand.brand").findMany({
-          filters:{
-            Location:{
-              Slug: {
-                $eq: location
-              }
-            }
-          },
           populate: "*",
           limit: pagination.limit,
           start: pagination.start,
