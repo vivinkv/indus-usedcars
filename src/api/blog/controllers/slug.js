@@ -218,7 +218,7 @@ module.exports = {
                 const featuredImageId = await uploadWithRetry(
                   blogDetail?.featured_image?.file_path
                 );
-                console.log(featuredImageId);
+                console.log({featuredImageId,id:blogDetail?.id});
                 
                 if (featuredImageId) {
                   console.log('yes insider');

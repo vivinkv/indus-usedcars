@@ -223,6 +223,8 @@ module.exports = {
           // Remove brackets and split by comma
           const cleanedFuel = fuel.replace(/[\[\]{}]/g, '');
           const fuelArray = cleanedFuel.split(',').map(f => f.trim());
+          console.log(fuelArray);
+          
           
           if (fuelArray.length > 0) {
             filters.Fuel_Type = {
@@ -259,6 +261,8 @@ module.exports = {
           // Remove brackets and split by comma
           const cleanedTransmission = transmission.replace(/[\[\]{}]/g, '');
           const transmissionArray = cleanedTransmission.split(',').map(t => t.trim());
+          console.log(transmissionArray);
+          
           
           if (transmissionArray.length > 0) {
             filters.Transmission_Type = {
