@@ -35,15 +35,6 @@
     "Color": {
       "type": "string"
     },
-    "Kilometers": {
-      "type": "string"
-    },
-    "PSP": {
-      "type": "string"
-    },
-    "Year_Of_Month": {
-      "type": "string"
-    },
     "Variant": {
       "type": "string"
     },
@@ -146,9 +137,15 @@
       "repeatable": false,
       "component": "shared.seo"
     },
-    "Amount": {
+    "PSP": {
       "type": "decimal",
       "default": 100000
+    },
+    "Kilometers": {
+      "type": "biginteger"
+    },
+    "Year_Of_Month": {
+      "type": "integer"
     }
   }
 }

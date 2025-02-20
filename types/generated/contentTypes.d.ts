@@ -529,7 +529,6 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    Amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<100000>;
     Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     Choose_Next: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Color: Schema.Attribute.String;
@@ -554,7 +553,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     >;
     Insurance_Type: Schema.Attribute.Enumeration<['Third Party']>;
     Insurance_Validity: Schema.Attribute.Date;
-    Kilometers: Schema.Attribute.String;
+    Kilometers: Schema.Attribute.BigInteger;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::car.car'> &
       Schema.Attribute.Private;
@@ -563,7 +562,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     Name: Schema.Attribute.String;
     Outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
     Owner_Type: Schema.Attribute.String;
-    PSP: Schema.Attribute.String;
+    PSP: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<100000>;
     publishedAt: Schema.Attribute.DateTime;
     Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Registration_Year: Schema.Attribute.Date;
@@ -581,7 +580,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     >;
     Vehicle_Reg_No: Schema.Attribute.String & Schema.Attribute.Unique;
     Vehicle_Status: Schema.Attribute.Enumeration<['SOLD', 'STOCK']>;
-    Year_Of_Month: Schema.Attribute.String;
+    Year_Of_Month: Schema.Attribute.Integer;
   };
 }
 
