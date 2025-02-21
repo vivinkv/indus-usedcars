@@ -202,7 +202,7 @@ module.exports = {
       };
       let count = await strapi.documents("api::brand.brand").count();
 
-      let brand;
+      let brand; 
       if (!search) {
         brand = await strapi.documents("api::brand.brand").findMany({
           populate: "*",
@@ -313,7 +313,9 @@ module.exports = {
         pageSize = 10,
       } = ctx.query;
       console.log(ctx.query);
-
+      console.log({fuel:fuel?.length,brand:brand?.length,transmission:transmission?.length,year:year?.length,kilometers:kilometers?.length,price:price?.length});
+      
+ 
       // Calculate pagination values
       const limit = parseInt(pageSize);
       const start = (parseInt(page) - 1) * limit;
@@ -328,14 +330,14 @@ module.exports = {
         };
       }
 
-      if (fuel) {
+      if (fuel && fuel !== '[]') {
         try {
           // Remove brackets and split by comma
           const cleanedFuel = fuel.replace(/[\[\]{}]/g, "");
-          const fuelArray = cleanedFuel.split(",").map((f) => f.trim());
+          const fuelArray = cleanedFuel.split(",").map((f) => f.trim());  
           console.log(fuelArray);
 
-          if (fuelArray.length > 0) {
+          if (fuelArray.length > 0 && fuelArray[0] !== '') {
             filters.Fuel_Type = {
               Name: {
                 $in: fuelArray,
@@ -347,13 +349,13 @@ module.exports = {
         }
       }
 
-      if (brand) {
+      if (brand && brand !== '[]') {
         try {
           // Remove brackets and split by comma
           const cleanedBrand = brand.replace(/[\[\]{}]/g, "");
           const brandArray = cleanedBrand.split(",").map((b) => b.trim());
 
-          if (brandArray.length > 0) {
+          if (brandArray.length > 0 && brandArray[0] !== '') {
             filters.Brand = {
               Name: {
                 $in: brandArray,
@@ -365,7 +367,7 @@ module.exports = {
         }
       }
 
-      if (transmission) {
+      if (transmission && transmission !== '[]') { 
         try {
           // Remove brackets and split by comma
           const cleanedTransmission = transmission.replace(/[\[\]{}]/g, "");
@@ -374,7 +376,7 @@ module.exports = {
             .map((t) => t.trim());
           console.log(transmissionArray);
 
-          if (transmissionArray.length > 0) {
+          if (transmissionArray.length > 0 && transmissionArray[0] !== '') {
             filters.Transmission_Type = {
               $in: transmissionArray,
             };
@@ -384,29 +386,35 @@ module.exports = {
         }
       }
 
-      if (year) {
+      if (year && year !== '[]') {
         console.log(year);
         const years = JSON.parse(year);
-        filters.Year_Of_Month = {
-          $between: [years[0], years[1]],
-        };
+        if (years.length > 0) {
+          filters.Year_Of_Month = {
+            $between: [years[0], years[1]],
+          };
+        }
       }
-      if (kilometers) {
+      if (kilometers && kilometers !== '[]') {
         const km = JSON.parse(kilometers);
-        filters.Kilometers = {
-          $between: [km[0], km[1]],
-        };
+        if (km.length > 0) {
+          filters.Kilometers = {
+            $between: [km[0], km[1]],
+          };
+        }
       }
-      if (price) {
+      if (price && price !== '[]') {
         const prices = JSON.parse(price);
-        console.log(
-          typeof prices[0].toString(),
-          prices[1].toFixed(2).toString()
-        );
+        if (prices.length > 0) {
+          console.log(
+            typeof prices[0].toString(),
+            prices[1].toFixed(2).toString()
+          );
 
-        filters.PSP = {
-          $between: [prices[0], prices[1]],
-        };
+          filters.PSP = {
+            $between: [prices[0], prices[1]],
+          };
+        }
       }
       const locationPage = await strapi
         .documents("api::location.location")

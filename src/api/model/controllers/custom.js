@@ -28,8 +28,11 @@ module.exports = {
         return null;
       };
 
+      const data=await axios.get('https://indususedcars.com/api/combination-pages');
+
+
       // Process pages from 1 to 40
-      for (let page = 1; page <= 40; page++) {
+      for (let page = 1; page <= data?.data?.meta?.last_page; page++) {
         console.log(`processing page ${page}`);
         
         try {
@@ -92,6 +95,9 @@ module.exports = {
                       Bottom_Description: modelData?.data?.bottom_description,
                       Extra_JS: modelData?.data?.extra_js,
                       Related_Type: modelData?.data?.related_type,
+                      FAQ:{
+                        Title:modelData?.data?.faq?.name
+                      },
                       SEO: {
                         Meta_Title: modelData?.data?.browser_title,
                         Meta_Description: modelData?.data?.meta_description,
@@ -102,6 +108,7 @@ module.exports = {
                       },
                     },
                     status: "published",
+                    populate:['SEO','FAQ']
                   });
 
                   console.log(createdModel);

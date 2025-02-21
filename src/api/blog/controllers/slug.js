@@ -50,14 +50,13 @@ module.exports = {
       console.log("blog running");
         // Helper function to upload image using Strapi's upload API
         const uploadImage = async (filePath) => {
-          console.log(filePath);
-          if (!filePath) return null;
-          console.log(`${filePath.replaceAll(/ /g, '%20')}`);
-          
           try {
-            // Fetch image from remote URL
+            // Trim and encode file path
+            const cleanedPath = filePath?.trim().replaceAll(/ /g, '%20');
+            if (!cleanedPath) return null;
+
             const response = await axios.get(
-              `https://indususedcars.com/${filePath.replaceAll(/ /g, '%20')}`,
+              `https://indususedcars.com/${cleanedPath}`,
               {
                 responseType: "arraybuffer",
               }
@@ -85,17 +84,21 @@ module.exports = {
             return uploadResponse.data[0]?.id || null;
           } catch (error) {
             console.error("Error uploading image:", error);
-            return null;
+            return { error: true, message: error.message, filePath };
           }
         };
 
+        // Track failed uploads
+        const failedUploads = [];
+
         // Upload images with retry logic
-        const uploadWithRetry = async (filePath, retries = 3) => {
+        const uploadWithRetry = async (filePath, blog, retries = 3) => {
           for (let i = 0; i < retries; i++) {
-            const imageId = await uploadImage(filePath);
-            if (imageId) return imageId;
+            const result = await uploadImage(filePath);
+            if (result && !result.error) return result;
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
+          failedUploads.push({ filePath, slug: blog?.slug });
           return null;
         };
       const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
@@ -126,12 +129,15 @@ module.exports = {
 
               const featuredImageId = await uploadWithRetry(
                 blogDetail?.featured_image?.file_path
+                , blog
               );
               const bannerImageId = await uploadWithRetry(
                 blogDetail?.banner_image?.file_path
+                , blog
               );
               const metaImageId = await uploadWithRetry(
                 blogDetail?.og_image?.file_path
+                , blog
               );
 
               // Truncate long text fields to 255 characters
@@ -178,25 +184,34 @@ module.exports = {
               };
 
               // Create and publish the blog
-              const createdBlog = await strapi
-                .documents("api::blog.blog")
-                .create({
-                  data: blogData,
-                  status:'published',
-                  populate: [
-                    "Featured_Image",
-                    "Banner_Image",
-                    "SEO.Meta_Image",
-                    "Author",
-                  ],
+              try {
+                const createdBlog = await strapi
+                  .documents("api::blog.blog")
+                  .create({
+                    data: blogData,
+                    status:'published',
+                    populate: [
+                      "Featured_Image",
+                      "Banner_Image",
+                      "SEO.Meta_Image",
+                      "Author",
+                    ],
+                  });
+
+                console.log({ createdBlog });
+
+                await strapi.documents("api::blog.blog").update({
+                  where: { id: createdBlog.id },
+                  data: { publishedAt: blogDetail?.created_at },
                 });
-
-              console.log({ createdBlog });
-
-              await strapi.documents("api::blog.blog").update({
-                where: { id: createdBlog.id },
-                data: { publishedAt: blogDetail?.created_at },
-              });
+              } catch (error) {
+                if (error.name === 'YupValidationError' && error.message.includes('unique')) {
+                  console.warn(`Skipping blog with slug "${blogDetail?.slug}" due to unique constraint violation.`);
+                } else {
+                  throw error; // Re-throw other errors
+                }
+                continue; // Continue to the next blog
+              }
             } else {
               console.log(findBlog);
 
@@ -217,6 +232,7 @@ module.exports = {
                
                 const featuredImageId = await uploadWithRetry(
                   blogDetail?.featured_image?.file_path
+                  , blog
                 );
                 console.log({featuredImageId,id:blogDetail?.id});
                 
@@ -242,6 +258,7 @@ module.exports = {
                
                 const bannerImageId = await uploadWithRetry(
                   blogDetail?.banner_image?.file_path
+                  , blog
                 );
                 console.log(bannerImageId);
                 
@@ -264,6 +281,7 @@ module.exports = {
                 ).data;
                 const metaImageId = await uploadWithRetry(
                   blogDetail?.og_image?.file_path
+                  , blog
                 );
                 console.log(metaImageId);
                 
@@ -298,6 +316,12 @@ module.exports = {
             }
           }
         }
+      }
+
+      // After all processing, log failed uploads
+      if (failedUploads.length > 0) {
+        console.log("Failed to upload these images:");
+        console.table(failedUploads);
       }
 
       ctx.status = 200;
