@@ -255,6 +255,45 @@ module.exports = {
       ctx.body = error;
     }
   },
+  allStaticContent:async(ctx,next)=>{
+    try{
+      const static_content = await strapi.documents('api::cars-listing.cars-listing').findFirst({
+        populate: {
+          Offer_Section: {
+            populate: "*",
+          },
+          Exclusive_Section: {
+            populate: "*",
+          },
+          Assurance_Section: {
+            populate: "*",
+          },
+          Benefit_Section: {
+            populate: "*",
+          },
+          FAQ: {
+            populate: "*",
+          },
+          SEO: {
+            populate: {
+              Meta_Image: {
+                populate: "*",
+              },
+            },
+          },
+        },
+      })
+
+
+      ctx.status=200;
+      ctx.body={
+        data:static_content
+      }
+    }catch(error){
+      ctx.status = 500;
+      ctx.body = error;
+    }
+  },
   staticContent: async (ctx, next) => {
     try {
       const { location } = ctx.params;
@@ -301,8 +340,9 @@ module.exports = {
   },
   filterCars: async (ctx, next) => {
     try {
-      const { location } = ctx.params;
+      // const { location } = ctx.params;
       const {
+        location, 
         fuel,
         brand,
         transmission,
@@ -416,13 +456,21 @@ module.exports = {
           };
         }
       }
-      const locationPage = await strapi
+      let locationPage;
+      if(locationPage){
+        locationPage = await strapi
         .documents("api::location.location")
         .findFirst({
           filters: {
             Slug: location,
           },
         });
+      }else{
+        locationPage = await strapi
+        .documents("api::location.location")
+        .findFirst({});
+      }
+       
       if (!locationPage) {
         ctx.status = 404;
         ctx.body = { error: "Location not found" };

@@ -205,17 +205,13 @@ module.exports = {
                   data: { publishedAt: blogDetail?.created_at },
                 });
               } catch (error) {
-                if (error.name === 'YupValidationError' && error.message.includes('unique')) {
-                  console.warn(`Skipping blog with slug "${blogDetail?.slug}" due to unique constraint violation.`);
-                } else {
-                  throw error; // Re-throw other errors
-                }
-                continue; // Continue to the next blog
+                console.error("Error creating blog:", error);
+                continue; // Skip to next blog on any error
               }
             } else {
               console.log(findBlog);
 
-              // Check and update images if needed
+              // Check and update images if needed 
               const updateData = {};
 
               // Check and handle Featured_Image
@@ -299,15 +295,17 @@ module.exports = {
               console.log(Object.keys(updateData).length > 0,Object.keys(updateData));
               
               if (Object.keys(updateData).length > 0) {
-              
-                
-               const updatedBlog= await strapi.documents("api::blog.blog").update({
-                  documentId: findBlog.documentId,
-                  data: updateData,
-                  status:'published'
-                });
-                console.log({updatedBlog});
-                
+                try {
+                  const updatedBlog= await strapi.documents("api::blog.blog").update({
+                    documentId: findBlog.documentId,
+                    data: updateData,
+                    status:'published'
+                  });
+                  console.log({updatedBlog});
+                } catch (error) {
+                  console.error("Error updating blog:", error);
+                  continue; // Skip to next blog on any error
+                }
               }
 
             

@@ -584,6 +584,57 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCarsListingCarsListing extends Struct.SingleTypeSchema {
+  collectionName: 'cars_listings';
+  info: {
+    description: '';
+    displayName: 'Cars Listing';
+    pluralName: 'cars-listings';
+    singularName: 'cars-listing';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Assurance_Section: Schema.Attribute.Component<
+      'common.benefits-and-advantages-section',
+      false
+    >;
+    Benefit_Section: Schema.Attribute.Component<
+      'common.benefit-section',
+      false
+    >;
+    Content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Exclusive_Section: Schema.Attribute.Component<
+      'offer.exclusive-deals-section',
+      true
+    >;
+    FAQ: Schema.Attribute.Component<'common.faq', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cars-listing.cars-listing'
+    > &
+      Schema.Attribute.Private;
+    Offer_Section: Schema.Attribute.Component<'offer.offer-section', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiContactFormUiContactFormUi extends Struct.SingleTypeSchema {
   collectionName: 'contact_form_uis';
   info: {
@@ -1583,6 +1634,7 @@ declare module '@strapi/strapi' {
       'api::brand.brand': ApiBrandBrand;
       'api::car-detail.car-detail': ApiCarDetailCarDetail;
       'api::car.car': ApiCarCar;
+      'api::cars-listing.cars-listing': ApiCarsListingCarsListing;
       'api::contact-form-ui.contact-form-ui': ApiContactFormUiContactFormUi;
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;
       'api::general.general': ApiGeneralGeneral;

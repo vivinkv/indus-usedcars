@@ -22,6 +22,16 @@ module.exports = {
     },
     {
       method: 'GET',
+      path: '/car-filter/static-content',
+      handler: 'car-filter.allStaticContent',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
       path: '/car-filter/static-content/:location',
       handler: 'car-filter.staticContent',
       config: {
@@ -32,7 +42,7 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/car-filter/filter/:location',
+      path: '/car-filter/filter',
       handler: 'car-filter.filterCars',
       config: {
         auth: false,
