@@ -47,6 +47,9 @@
     },
     "OG_Description": {
       "type": "text"
+    },
+    "Script": {
+      "type": "text"
     }
   }
 }

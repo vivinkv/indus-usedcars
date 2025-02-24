@@ -6,26 +6,14 @@
   },
   "options": {},
   "attributes": {
-    "Body": {
-      "type": "customField",
-      "options": {
-        "preset": "defaultHtml"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    },
     "Head": {
-      "type": "customField",
-      "options": {
-        "preset": "defaultHtml"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
+      "type": "text"
+    },
+    "Body": {
+      "type": "text"
     },
     "Other": {
-      "type": "customField",
-      "options": {
-        "preset": "defaultHtml"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
+      "type": "text"
     }
   }
 }

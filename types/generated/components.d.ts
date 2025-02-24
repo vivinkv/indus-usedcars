@@ -39,6 +39,48 @@ export interface ButtonSection extends Struct.ComponentSchema {
   };
 }
 
+export interface CarAdditionalSections extends Struct.ComponentSchema {
+  collectionName: 'components_car_additional_sections';
+  info: {
+    displayName: 'Additional Sections';
+  };
+  attributes: {
+    Find_More: Schema.Attribute.Component<'car.find-more-section', true>;
+  };
+}
+
+export interface CarAvailabilityAndFeatures extends Struct.ComponentSchema {
+  collectionName: 'components_car_availability_and_features';
+  info: {
+    displayName: 'Availability and Features';
+  };
+  attributes: {
+    Home_Test_Drive: Schema.Attribute.Enumeration<
+      ['Available', 'Not Available']
+    >;
+    Location: Schema.Attribute.Relation<'oneToOne', 'api::location.location'>;
+    Outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
+  };
+}
+
+export interface CarBasicInformation extends Struct.ComponentSchema {
+  collectionName: 'components_car_basic_informations';
+  info: {
+    description: '';
+    displayName: 'Basic Information';
+  };
+  attributes: {
+    Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
+    Color: Schema.Attribute.String;
+    Model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
+    Variant: Schema.Attribute.String;
+    Vehicle_Category: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::vehicle-category.vehicle-category'
+    >;
+  };
+}
+
 export interface CarFindMoreSection extends Struct.ComponentSchema {
   collectionName: 'components_car_find_more_sections';
   info: {
@@ -49,6 +91,19 @@ export interface CarFindMoreSection extends Struct.ComponentSchema {
     Icon: Schema.Attribute.Media<'images' | 'files'>;
     Title: Schema.Attribute.String;
     URL: Schema.Attribute.String;
+  };
+}
+
+export interface CarHighlightingAndRecommendations
+  extends Struct.ComponentSchema {
+  collectionName: 'components_car_highlighting_and_recommendations';
+  info: {
+    displayName: 'Highlighting and Recommendations';
+  };
+  attributes: {
+    Choose_Next: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
   };
 }
 
@@ -75,6 +130,63 @@ export interface CarInspectionReportSection extends Struct.ComponentSchema {
     Icon: Schema.Attribute.Media<'images' | 'files'>;
     Report_Status: Schema.Attribute.Enumeration<['Pass', 'Fail']>;
     Title: Schema.Attribute.String;
+  };
+}
+
+export interface CarInsuranceAndInspection extends Struct.ComponentSchema {
+  collectionName: 'components_car_insurance_and_inspections';
+  info: {
+    displayName: 'Insurance and Inspection';
+  };
+  attributes: {
+    Inspection_Report: Schema.Attribute.Component<
+      'car.inspection-report-section',
+      true
+    >;
+    Insurance_Type: Schema.Attribute.Enumeration<['Third Party']>;
+    Insurance_Validity: Schema.Attribute.Date;
+  };
+}
+
+export interface CarMedia extends Struct.ComponentSchema {
+  collectionName: 'components_car_media';
+  info: {
+    displayName: 'Media';
+  };
+  attributes: {
+    Image: Schema.Attribute.Component<'car.image', false>;
+    Image_URL: Schema.Attribute.JSON;
+  };
+}
+
+export interface CarRegistrationAndStatus extends Struct.ComponentSchema {
+  collectionName: 'components_car_registration_and_statuses';
+  info: {
+    displayName: 'Registration and Status';
+  };
+  attributes: {
+    Kilometers: Schema.Attribute.BigInteger;
+    Owner_Type: Schema.Attribute.String;
+    Registration_Year: Schema.Attribute.Date;
+    Vehicle_Reg_No: Schema.Attribute.String & Schema.Attribute.Unique;
+    Vehicle_Status: Schema.Attribute.Enumeration<['SOLD', 'STOCK']>;
+    Year_Of_Month: Schema.Attribute.Integer;
+  };
+}
+
+export interface CarTechnicalAndPerformance extends Struct.ComponentSchema {
+  collectionName: 'components_car_technical_and_performances';
+  info: {
+    displayName: 'Technical and Performance';
+  };
+  attributes: {
+    Fuel_Type: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::fuel-type.fuel-type'
+    >;
+    PSP: Schema.Attribute.BigInteger;
+    Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']> &
+      Schema.Attribute.DefaultTo<'Manual'>;
   };
 }
 
@@ -376,27 +488,9 @@ export interface SeoGoogleTagManager extends Struct.ComponentSchema {
     displayName: 'Google Tag Manager';
   };
   attributes: {
-    Body: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
-    Head: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
-    Other: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
+    Body: Schema.Attribute.Text;
+    Head: Schema.Attribute.Text;
+    Other: Schema.Attribute.Text;
   };
 }
 
@@ -487,6 +581,7 @@ export interface SharedSeo extends Struct.ComponentSchema {
     Meta_Viewport: Schema.Attribute.String;
     OG_Description: Schema.Attribute.Text;
     OG_Title: Schema.Attribute.String;
+    Script: Schema.Attribute.Text;
     Structured_Data: Schema.Attribute.JSON;
   };
 }
@@ -573,9 +668,17 @@ declare module '@strapi/strapi' {
       'blog.blog-author': BlogBlogAuthor;
       'button.button': ButtonButton;
       'button.section': ButtonSection;
+      'car.additional-sections': CarAdditionalSections;
+      'car.availability-and-features': CarAvailabilityAndFeatures;
+      'car.basic-information': CarBasicInformation;
       'car.find-more-section': CarFindMoreSection;
+      'car.highlighting-and-recommendations': CarHighlightingAndRecommendations;
       'car.image': CarImage;
       'car.inspection-report-section': CarInspectionReportSection;
+      'car.insurance-and-inspection': CarInsuranceAndInspection;
+      'car.media': CarMedia;
+      'car.registration-and-status': CarRegistrationAndStatus;
+      'car.technical-and-performance': CarTechnicalAndPerformance;
       'common.author': CommonAuthor;
       'common.benefit-section': CommonBenefitSection;
       'common.benefits-and-advantages-section': CommonBenefitsAndAdvantagesSection;

@@ -529,6 +529,18 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Additional_Sections: Schema.Attribute.Component<
+      'car.additional-sections',
+      false
+    >;
+    Availability_Features: Schema.Attribute.Component<
+      'car.availability-and-features',
+      false
+    >;
+    Basic_Information: Schema.Attribute.Component<
+      'car.basic-information',
+      false
+    >;
     Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     Choose_Next: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Color: Schema.Attribute.String;
@@ -542,6 +554,10 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
       'oneToOne',
       'api::fuel-type.fuel-type'
     >;
+    Highlight_Recommendation: Schema.Attribute.Component<
+      'car.highlighting-and-recommendations',
+      false
+    >;
     Home_Test_Drive: Schema.Attribute.Enumeration<
       ['Available', 'Not Available']
     >;
@@ -551,6 +567,10 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
       'car.inspection-report-section',
       true
     >;
+    Insurance_Inspection: Schema.Attribute.Component<
+      'car.insurance-and-inspection',
+      false
+    >;
     Insurance_Type: Schema.Attribute.Enumeration<['Third Party']>;
     Insurance_Validity: Schema.Attribute.Date;
     Kilometers: Schema.Attribute.BigInteger;
@@ -558,6 +578,7 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::car.car'> &
       Schema.Attribute.Private;
     Location: Schema.Attribute.Relation<'oneToOne', 'api::location.location'>;
+    Media: Schema.Attribute.Component<'car.media', false>;
     Model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
     Name: Schema.Attribute.String;
     Outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
@@ -565,9 +586,17 @@ export interface ApiCarCar extends Struct.CollectionTypeSchema {
     PSP: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<100000>;
     publishedAt: Schema.Attribute.DateTime;
     Recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Registration_Status: Schema.Attribute.Component<
+      'car.registration-and-status',
+      false
+    >;
     Registration_Year: Schema.Attribute.Date;
     SEO: Schema.Attribute.Component<'shared.seo', false>;
     Slug: Schema.Attribute.UID<'Name'>;
+    Technical_Performance: Schema.Attribute.Component<
+      'car.technical-and-performance',
+      false
+    >;
     Transmission_Type: Schema.Attribute.Enumeration<['Manual', 'Automatic']> &
       Schema.Attribute.DefaultTo<'Manual'>;
     updatedAt: Schema.Attribute.DateTime;

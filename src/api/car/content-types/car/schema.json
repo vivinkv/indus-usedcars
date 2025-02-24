@@ -146,6 +146,54 @@
     },
     "Year_Of_Month": {
       "type": "integer"
+    },
+    "Basic_Information": {
+      "displayName": "Basic Information",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.basic-information"
+    },
+    "Registration_Status": {
+      "displayName": "Registration and Status",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.registration-and-status"
+    },
+    "Technical_Performance": {
+      "displayName": "Technical and Performance",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.technical-and-performance"
+    },
+    "Insurance_Inspection": {
+      "displayName": "Insurance and Inspection",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.insurance-and-inspection"
+    },
+    "Availability_Features": {
+      "displayName": "Availability and Features",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.availability-and-features"
+    },
+    "Media": {
+      "displayName": "Media",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.media"
+    },
+    "Highlight_Recommendation": {
+      "displayName": "Highlighting and Recommendations",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.highlighting-and-recommendations"
+    },
+    "Additional_Sections": {
+      "displayName": "Additional Sections",
+      "type": "component",
+      "repeatable": false,
+      "component": "car.additional-sections"
     }
   }
 }

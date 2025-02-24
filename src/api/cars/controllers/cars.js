@@ -280,12 +280,12 @@ module.exports = {
   },
   updateSlug: async (ctx, next) => {
     try {
-      console.log('running');
-      
+      console.log("running");
+
       const cars = await strapi.documents("api::car.car").findMany({});
       for (let car of cars) {
         console.log(car);
-        
+
         const slug = slugify(`${car.Name}-${car.Vehicle_Reg_No}`, {
           replacement: "-",
           remove: undefined,
@@ -295,27 +295,178 @@ module.exports = {
           trim: true,
         });
 
-        if(slug==car.Slug){
+        if (slug == car.Slug) {
           continue;
         }
         console.log(slug);
-        
+
         await strapi.documents("api::car.car").update({
           documentId: car.documentId,
           data: {
             Slug: slug, // Use the generated slug here
           },
         });
-        console.log('updated');
-        
+        console.log("updated");
       }
-      ctx.body={data:{
-        msg:'updated'
-      }}
+      ctx.body = {
+        data: {
+          msg: "updated",
+        },
+      };
     } catch (err) {
       ctx.body = {
         success: false,
         message: "Failed to update slug",
+        error: err.stack,
+      };
+    }
+  },
+  updateStucture: async (ctx, next) => {
+    try {
+      const cars = await strapi.documents("api::car.car").findMany({
+        populate: {
+          Outlet: {
+            populate: "*",
+          },
+          Brand: {
+            populate: "*",
+          },
+          Model: {
+            populate: "*",
+          },
+          Fuel_Type: {
+            populate: "*",
+          },
+          Location: {
+            populate: "*",
+          },
+          Inspection_Report: {
+            populate: "*",
+          },
+          Image: {
+            populate: "*",
+          },
+          Find_More: {
+            populate: "*",
+          },
+          Vehicle_Category: {
+            populate: "*",
+          },
+          Basic_Information:{
+            populate:'*' 
+          }
+        },
+      });
+      const count=await strapi.documents("api::car.car").count();
+      let i=1;
+      for (let car of cars) {
+        console.log(`Uploading Cars: ${count-i++} left`); 
+
+        if(!car?.Basic_Information){
+          console.log('inside'); 
+          
+          const updateData = {
+            Basic_Information: {
+              Brand: car?.Brand,
+              Model: car?.Model,
+              Variant: car?.Variant,
+              Color: car?.Color,
+              Vehicle_Category: car?.Vehicle_Category,
+            },
+            Registration_Status: {
+              Vehicle_Reg_No: car?.Vehicle_Reg_No,
+              Registration_Year: car?.Registration_Year,
+              Year_Of_Month: car?.Year_Of_Month,
+              Owner_Type: car?.Owner_Type,
+              Kilometers: car?.Kilometers,
+              Vehicle_Status: car?.Vehicle_Status,
+            },
+            Technical_Performance: {
+              Fuel_Type: car?.Fuel_Type,
+              PSP: car?.PSP,
+              Transmission_Type: car?.Transmission_Type,
+            },
+            Insurance_Inspection: {
+              Insurance_Type: car?.Insurance_Type,
+              Insurance_Validity: car?.Insurance_Validity,
+              Inspection_Report: [],
+            },
+            Availability_Features: {
+              Outlet: car?.Outlet,
+              Location: car?.Location,
+              Home_Test_Drive: car?.Home_Test_Drive,
+            },
+            Media: {
+              Image_URL: car?.Image_URL,
+              Image: car?.Image,
+            },
+            Highlight_Recommendation: {
+              Recommended: car?.Recommended,
+              Featured: car?.Featured,
+              Choose_Next: car?.Choose_Next,
+            },
+            Additional_Sections: {
+              Find_More: [],
+            },
+          };
+  
+          // Handle Find_More as an array if it exists
+          if (car?.Find_More) {
+            updateData.Additional_Sections.Find_More = Array.isArray(
+              car.Find_More
+            )
+              ? car.Find_More
+              : [car.Find_More];
+          }
+  
+          // Handle Inspection_Report as an array if it exists
+          if (car?.Inspection_Report) {
+            updateData.Insurance_Inspection.Inspection_Report = Array.isArray(
+              car.Inspection_Report
+            )
+              ? car.Inspection_Report
+              : [car.Inspection_Report];
+          }
+  
+          await strapi.documents("api::car.car").update({
+            documentId: car?.documentId,
+            data: updateData,
+            status: "published",
+            populate: {
+              Basic_Information: { populate: "*" },
+              Registration_Status: { populate: "*" },
+              Technical_Performance: { populate: "*" },
+              Insurance_Inspection: { populate: "*" },
+              Availability_Features: {
+                populate: {
+                  Outlet: { populate: "*" },
+                  Location: { populate: "*" },
+                },
+              },
+              Media: {
+                populate: {
+                  Image: { populate: "*" },
+                },
+              },
+              Highlight_Recommendation: { populate: "*" },
+              Additional_Sections: {
+                populate: {
+                  Find_More: { populate: "*" },
+                },
+              },
+            },
+          });
+        }
+
+       
+      }
+      ctx.status = 200;
+      ctx.body = { data: { msg: "updated" } };
+    } catch (err) {
+      ctx.status = 500;
+      ctx.body = {
+        success: false,
+        message: "Failed to update structure",
         error: err.stack,
       };
     }
