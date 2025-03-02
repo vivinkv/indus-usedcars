@@ -664,6 +664,54 @@ export interface ApiCarsListingCarsListing extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiCombinationPageCombinationPage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'combination_pages';
+  info: {
+    displayName: 'Combination Page';
+    pluralName: 'combination-pages';
+    singularName: 'combination-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Bottom_Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Extra_JS: Schema.Attribute.Text;
+    FAQ: Schema.Attribute.Component<'common.faq', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::combination-page.combination-page'
+    > &
+      Schema.Attribute.Private;
+    Page_Heading: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    Related_Type: Schema.Attribute.String;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
+    Slug: Schema.Attribute.UID<'Page_Heading'>;
+    Top_Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiContactFormUiContactFormUi extends Struct.SingleTypeSchema {
   collectionName: 'contact_form_uis';
   info: {
@@ -1664,6 +1712,7 @@ declare module '@strapi/strapi' {
       'api::car-detail.car-detail': ApiCarDetailCarDetail;
       'api::car.car': ApiCarCar;
       'api::cars-listing.cars-listing': ApiCarsListingCarsListing;
+      'api::combination-page.combination-page': ApiCombinationPageCombinationPage;
       'api::contact-form-ui.contact-form-ui': ApiContactFormUiContactFormUi;
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;
       'api::general.general': ApiGeneralGeneral;
