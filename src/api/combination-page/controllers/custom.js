@@ -268,12 +268,14 @@ module.exports = {
       ctx.status = 200;
       ctx.body = {
         data: data, meta: {
-          total: count,
-          page: page,
-          pageSize: limit,
-          current_page: page,
-          pageCount: Math.ceil(data.length / limit),
-          last_page: Math.ceil(data.length / limit),
+          pagination:{
+            total: count,
+            page: page,
+            pageSize: limit,
+            pageCount: Math.ceil(data.length / limit),
+            last_page: Math.ceil(data.length / limit),
+          }
+         
         }
       };
     } catch (error) {
