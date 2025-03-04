@@ -200,6 +200,14 @@ module.exports = {
             },
           },
         });
+
+      if (!data) {
+        ctx.status = 404;
+        ctx.body = {
+          error: 'Not Found'
+        }
+      }
+
       ctx.status = 200;
       ctx.body = data;
     } catch (error) {
@@ -231,7 +239,7 @@ module.exports = {
             Location: {
               Slug: location
             }
-          }, 
+          },
           start: (page - 1) * limit,
           limit: limit,
           populate: {

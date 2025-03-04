@@ -413,8 +413,7 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
   attributes: {
     Author: Schema.Attribute.Component<'blog.blog-author', false>;
     Banner_Image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
+      'images' | 'files' | 'videos' | 'audios'
     >;
     Bottom_Description: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
