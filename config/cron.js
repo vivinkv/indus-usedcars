@@ -39,4 +39,21 @@ module.exports = {
       rule: "0 */4 * * *",
     },
   },
+
+  combinationPage: {
+    task: async ({ strapi }) => {
+      try {
+        console.log("Generating combination page");
+        const response = await axios.get(
+          `${process.env.BACKEND_URL}/api/combination-page/add`
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.log(error?.message);
+      }
+    },
+    options: {
+      rule: "@once", // This will run only once when the server starts
+    },
+  },
 };
