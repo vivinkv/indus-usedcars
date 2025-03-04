@@ -340,6 +340,8 @@ module.exports = {
   },
   blogsList: async (ctx, next) => {
     try {
+      console.log('working');
+      
       const { start = 0, limit = 10 } = ctx.query;
 
       // Get total count of blogs
