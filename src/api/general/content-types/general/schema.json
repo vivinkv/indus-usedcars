@@ -62,6 +62,10 @@
       "type": "component",
       "repeatable": false,
       "component": "settings.smtp"
+    },
+    "Link": {
+      "type": "string",
+      "default": "#"
     }
   }
 }

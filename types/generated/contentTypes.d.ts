@@ -797,6 +797,7 @@ export interface ApiGeneralGeneral extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     Favicon: Schema.Attribute.Media<'images' | 'files'>;
     GTM_Manager: Schema.Attribute.Component<'seo.google-tag-manager', false>;
+    Link: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

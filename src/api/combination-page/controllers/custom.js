@@ -207,4 +207,71 @@ module.exports = {
       ctx.body = error;
     }
   },
+  carsList: async (ctx, next) => {
+    try {
+      const { slug } = ctx.params;
+      const { page = 1, limit = 10 } = ctx.query;
+      //slug=used-maruti-kochi
+      const extract = slug.split('-');
+      let brand, location;
+      if (extract?.length == 3) {
+        brand = extract[1];
+        location = extract[2];
+      } else if (extract?.length == 1) {
+        brand = extract[1];
+      }
+      console.log(extract);
+
+      const [data, count] = await Promise.all([
+        strapi.documents("api::car.car").findMany({
+          filters: {
+            Brand: {
+              Slug: brand
+            },
+            Location: {
+              Slug: location
+            }
+          }, 
+          start: (page - 1) * limit,
+          limit: limit,
+          populate: {
+            Brand: {
+              populate: '*'
+            },
+            Location: {
+              populate: '*'
+            },
+            Image: {
+              populate: '*'
+            }
+          }
+        }),
+        strapi.documents("api::car.car").count({
+          filters: {
+            Brand: {
+              Slug: brand
+            },
+            Location: {
+              Slug: location
+            }
+          }
+        })
+      ]);
+      ctx.status = 200;
+      ctx.body = {
+        data: data, meta: {
+          total: count,
+          page: page,
+          pageSize: limit,
+          current_page: page,
+          pageCount: Math.ceil(data.length / limit),
+          last_page: Math.ceil(data.length / limit),
+        }
+      };
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = error;
+    }
+
+  },
 };
