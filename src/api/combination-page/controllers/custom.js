@@ -206,6 +206,7 @@ module.exports = {
         ctx.body = {
           error: 'Not Found'
         }
+        return;
       }
 
       ctx.status = 200;
