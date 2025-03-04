@@ -226,7 +226,7 @@ module.exports = {
         brand = extract[1];
         location = extract[2];
       } else if (extract?.length == 1) {
-        brand = extract[1];
+        brand = extract[0];
       }
       console.log(extract);
 
