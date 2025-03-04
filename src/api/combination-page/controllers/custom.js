@@ -141,15 +141,64 @@ module.exports = {
               }
             } else {
               // Update the Slug if the model already exists
-              await strapi
-                .documents("api::combination-page.combination-page")
-                .update({
-                  documentId: existingModel.documentId,
+              // await strapi
+              //   .documents("api::combination-page.combination-page")
+              //   .update({
+              //     documentId: existingModel.documentId,
+              //     data: {
+              //       Slug: slug,
+              //     },
+              //   });
+const extractSlug = model?.slug?.startsWith('used') ? model?.slug?.split('-') : null;
+              if(extractSlug?.length==3){
+                const locationSlug = model?.slug?.split('-')[2];
+              const locationExist = await strapi.documents('api::location.location').findFirst({
+                filters: {
+                  Slug: locationSlug
+                }
+              })
+
+              // let brandSlug = model?.slug?.split('-')[1];
+
+
+
+              // const brandExist = await strapi.documents('api::brand.brand').findFirst({
+              //   filters: {
+              //     Slug: brandSlug
+              //   }
+              // })
+
+              // if (!brandExist) {
+              //   await strapi.documents('api::brand.brand').create({
+              //     data: {
+              //       Slug: brandSlug,
+              //       Name: brandSlug?.charAt(0).toUpperCase() + brandSlug?.slice(1),
+              //     }
+              //   })
+              // }
+
+              if (!locationExist) {
+                await strapi.documents('api::location.location').create({
                   data: {
-                    Slug: slug,
-                  },
-                });
-              console.log(`Updated Slug for existing model: ${slug}`);
+                    Slug: locationSlug,
+                    Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
+                  }
+                })
+              }else{
+                await strapi.documents('api::location.location').update({
+                  documentId: locationExist.documentId,
+                  data: {
+                    Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
+                    Slug: locationSlug?.toLowerCase(),
+                  }
+                })
+                console.log('updated location');
+                
+              }
+              console.log(`Updated Slug for existing model: ${slug},location:${locationSlug}`);
+              }
+              
+             
             }
           }
         } catch (error) {
@@ -269,14 +318,14 @@ module.exports = {
       ctx.status = 200;
       ctx.body = {
         data: data, meta: {
-          pagination:{
+          pagination: {
             total: count,
             page: page,
             pageSize: limit,
             pageCount: Math.ceil(data.length / limit),
             last_page: Math.ceil(data.length / limit),
           }
-         
+
         }
       };
     } catch (error) {
