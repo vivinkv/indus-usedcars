@@ -190,7 +190,8 @@ const extractSlug = model?.slug?.startsWith('used') ? model?.slug?.split('-') : 
                   data: {
                     Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
                     Slug: locationSlug?.toLowerCase(),
-                  }
+                  },
+                  status:'published'
                 })
                 console.log('updated location');
                 
