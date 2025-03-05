@@ -42,5 +42,5 @@ ENV PORT=1337
 # Expose the port
 EXPOSE 1337
 
-# Start the application
+# Start the Strapi application
 CMD ["npm", "run", "start"]

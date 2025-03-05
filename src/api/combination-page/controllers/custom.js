@@ -149,57 +149,57 @@ module.exports = {
               //       Slug: slug,
               //     },
               //   });
-const extractSlug = model?.slug?.startsWith('used') ? model?.slug?.split('-') : null;
-              if(extractSlug?.length==3){
+              const extractSlug = model?.slug?.startsWith('used') ? model?.slug?.split('-') : null;
+              if (extractSlug?.length == 3) {
                 const locationSlug = model?.slug?.split('-')[2];
-              const locationExist = await strapi.documents('api::location.location').findFirst({
-                filters: {
-                  Slug: locationSlug
-                }
-              })
-
-              // let brandSlug = model?.slug?.split('-')[1];
-
-
-
-              // const brandExist = await strapi.documents('api::brand.brand').findFirst({
-              //   filters: {
-              //     Slug: brandSlug
-              //   }
-              // })
-
-              // if (!brandExist) {
-              //   await strapi.documents('api::brand.brand').create({
-              //     data: {
-              //       Slug: brandSlug,
-              //       Name: brandSlug?.charAt(0).toUpperCase() + brandSlug?.slice(1),
-              //     }
-              //   })
-              // }
-
-              if (!locationExist) {
-                await strapi.documents('api::location.location').create({
-                  data: {
-                    Slug: locationSlug,
-                    Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
+                const locationExist = await strapi.documents('api::location.location').findFirst({
+                  filters: {
+                    Slug: locationSlug
                   }
-                })
-              }else{
-                await strapi.documents('api::location.location').update({
-                  documentId: locationExist.documentId,
-                  data: {
-                    Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
-                    Slug: locationSlug?.toLowerCase(),
-                  },
-                  status:'published'
-                })
-                console.log('updated location');
-                
+                }) 
+
+                // let brandSlug = model?.slug?.split('-')[1];
+
+
+
+                // const brandExist = await strapi.documents('api::brand.brand').findFirst({
+                //   filters: {
+                //     Slug: brandSlug
+                //   }
+                // })
+
+                // if (!brandExist) {
+                //   await strapi.documents('api::brand.brand').create({
+                //     data: {
+                //       Slug: brandSlug,
+                //       Name: brandSlug?.charAt(0).toUpperCase() + brandSlug?.slice(1),
+                //     }
+                //   })
+                // }
+
+                if (!locationExist) {
+                  await strapi.documents('api::location.location').create({
+                    data: {
+                      Slug: locationSlug,
+                      Name: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
+                    }
+                  })
+                } else {
+                  await strapi.documents('api::location.location').update({
+                    documentId: locationExist.documentId,
+                    data: {
+                      Place: locationSlug?.charAt(0).toUpperCase() + locationSlug?.slice(1),
+                      Slug: locationSlug?.toLowerCase(),
+                    },
+                    status: 'published'
+                  })
+                  console.log('updated location');
+
+                }
+                console.log(`Updated Slug for existing model: ${slug},location:${locationSlug}`);
               }
-              console.log(`Updated Slug for existing model: ${slug},location:${locationSlug}`);
-              }
-              
-             
+
+
             }
           }
         } catch (error) {
