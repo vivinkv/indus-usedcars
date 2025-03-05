@@ -1099,6 +1099,45 @@ export interface ApiResponsePageResponsePage
   };
 }
 
+export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
+  collectionName: 'static_pages';
+  info: {
+    displayName: 'Static Page';
+    pluralName: 'static-pages';
+    singularName: 'static-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::static-page.static-page'
+    > &
+      Schema.Attribute.Private;
+    Name: Schema.Attribute.String;
+    Page_Heading: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
+    Short_Description: Schema.Attribute.Text;
+    Slug: Schema.Attribute.UID<'Name'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
   collectionName: 'testimonials';
   info: {
@@ -1723,6 +1762,7 @@ declare module '@strapi/strapi' {
       'api::model.model': ApiModelModel;
       'api::outlet.outlet': ApiOutletOutlet;
       'api::response-page.response-page': ApiResponsePageResponsePage;
+      'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::vehicle-category.vehicle-category': ApiVehicleCategoryVehicleCategory;
       'api::widget.widget': ApiWidgetWidget;
