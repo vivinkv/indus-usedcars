@@ -48,62 +48,62 @@ module.exports = {
   fetchBlog: async (ctx, next) => {
     try {
       console.log("blog running");
-        // Helper function to upload image using Strapi's upload API
-        const uploadImage = async (filePath) => {
-          try {
-            // Trim and encode file path
-            const cleanedPath = filePath?.trim().replaceAll(/ /g, '%20');
-            if (!cleanedPath) return null;
+      // Helper function to upload image using Strapi's upload API
+      const uploadImage = async (filePath) => {
+        try {
+          // Trim and encode file path
+          const cleanedPath = filePath?.trim().replaceAll(/ /g, '%20');
+          if (!cleanedPath) return null;
 
-            const response = await axios.get(
-              `https://indususedcars.com/${cleanedPath}`,
-              {
-                responseType: "arraybuffer",
-              }
-            );
+          const response = await axios.get(
+            `https://indususedcars.com/${cleanedPath}`,
+            {
+              responseType: "arraybuffer",
+            }
+          );
 
-            // Create FormData for Strapi upload
-            const formData = new FormData();
-            const blob = new Blob([response.data], {
-              type: response.headers["content-type"],
-            });
-            formData.append("files", blob, `image_${Date.now()}.jpg`);
+          // Create FormData for Strapi upload
+          const formData = new FormData();
+          const blob = new Blob([response.data], {
+            type: response.headers["content-type"],
+          });
+          formData.append("files", blob, `image_${Date.now()}.jpg`);
 
-            // Upload to Strapi
-            const uploadResponse = await axios.post(
-              `${process.env.STRAPI_URL || "http://localhost:1337"}/api/upload`,
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            );
+          // Upload to Strapi
+          const uploadResponse = await axios.post(
+            `${process.env.STRAPI_URL || "http://localhost:1337"}/api/upload`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
 
-            // Return the first uploaded file's ID
-            return uploadResponse.data[0]?.id || null;
-          } catch (error) {
-            console.error("Error uploading image:", error);
-            return { error: true, message: error.message, filePath };
-          }
-        };
+          // Return the first uploaded file's ID
+          return uploadResponse.data[0]?.id || null;
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          return { error: true, message: error.message, filePath };
+        }
+      };
 
-        // Track failed uploads
-        const failedUploads = [];
+      // Track failed uploads
+      const failedUploads = [];
 
-        // Upload images with retry logic
-        const uploadWithRetry = async (filePath, blog, retries = 3) => {
-          for (let i = 0; i < retries; i++) {
-            const result = await uploadImage(filePath);
-            if (result && !result.error) return result;
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-          }
-          failedUploads.push({ filePath, slug: blog?.slug });
-          return null;
-        };
+      // Upload images with retry logic
+      const uploadWithRetry = async (filePath, blog, retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+          const result = await uploadImage(filePath);
+          if (result && !result.error) return result;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+        failedUploads.push({ filePath, slug: blog?.slug });
+        return null;
+      };
       const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
       let blogList;
-      for (let i = 1; i <= blogsCount?.data?.last_page; i++) { 
+      for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
         blogList = await axios.get(
           `https://indususedcars.com/api/pages?page=${i}`
         );
@@ -189,7 +189,7 @@ module.exports = {
                   .documents("api::blog.blog")
                   .create({
                     data: blogData,
-                    status:'published',
+                    status: 'published',
                     populate: [
                       "Featured_Image",
                       "Banner_Image",
@@ -218,47 +218,47 @@ module.exports = {
               if (!findBlog.Featured_Image) {
                 console.log('yes');
                 console.log(blog?.featured_image?.file_path);
-                
-                
+
+
                 const blogDetail = (
                   await axios.get(
                     `https://indususedcars.com/api/pages/${blog?.slug}`
                   )
                 ).data;
-               
+
                 const featuredImageId = await uploadWithRetry(
                   blogDetail?.featured_image?.file_path
                   , blog
                 );
-                console.log({featuredImageId,id:blogDetail?.id});
-                
+                console.log({ featuredImageId, id: blogDetail?.id });
+
                 if (featuredImageId) {
                   console.log('yes insider');
-                  
+
                   updateData.Featured_Image = { id: featuredImageId };
                 }
                 console.log('end');
-                
+
               }
 
               // Check and handle Banner_Image
               if (!findBlog.Banner_Image) {
                 console.log('yes');
                 console.log(blog?.banner_image?.file_path);
-                
+
                 const blogDetail = (
                   await axios.get(
                     `https://indususedcars.com/api/pages/${blog?.slug}`
                   )
                 ).data;
-               
+
                 const bannerImageId = await uploadWithRetry(
                   blogDetail?.banner_image?.file_path
                   , blog
                 );
                 console.log(bannerImageId);
-                
-               
+
+
                 if (bannerImageId) {
                   console.log('yes insider');
                   updateData.Banner_Image = { id: bannerImageId };
@@ -268,7 +268,7 @@ module.exports = {
 
               // Check and handle SEO.Meta_Image
               if (!findBlog.SEO?.Meta_Image) {
-               
+
                 console.log(blog?.og_image?.file_path);
                 const blogDetail = (
                   await axios.get(
@@ -280,35 +280,53 @@ module.exports = {
                   , blog
                 );
                 console.log(metaImageId);
-                
+
                 if (metaImageId) {
-                  
+
                   updateData.SEO = {
                     ...findBlog.SEO,
                     Meta_Image: { id: metaImageId }
                   };
                 }
-               
+
               }
 
               // Update blog if any images were missing
-              console.log(Object.keys(updateData).length > 0,Object.keys(updateData));
-              
+              console.log(Object.keys(updateData).length > 0, Object.keys(updateData));
+
               if (Object.keys(updateData).length > 0) {
                 try {
-                  const updatedBlog= await strapi.documents("api::blog.blog").update({
+                  const updatedBlog = await strapi.documents("api::blog.blog").update({
                     documentId: findBlog.documentId,
                     data: updateData,
-                    status:'published'
+                    status: 'published'
                   });
-                  console.log({updatedBlog});
+                  console.log({ updatedBlog });
                 } catch (error) {
                   console.error("Error updating blog:", error);
                   continue; // Skip to next blog on any error
                 }
               }
 
-            
+              //update blog date
+              const blogDetail = (
+                await axios.get(
+                  `https://indususedcars.com/api/pages/${blog?.slug}`
+                )
+              ).data;
+
+              await strapi.documents('api::blog.blog').update({
+                documentId: findBlog.documentId,
+                data: {
+                  publishedAt: blogDetail?.published_at,
+                  createdAt: blogDetail?.created_at
+                },
+                status: 'published'
+              })
+
+
+
+
 
               console.log("done");
             }
@@ -341,7 +359,7 @@ module.exports = {
   blogsList: async (ctx, next) => {
     try {
       console.log('working');
-      
+
       const { start = 0, limit = 10 } = ctx.query;
 
       // Get total count of blogs
@@ -395,30 +413,30 @@ module.exports = {
   },
   updateBlogStatus: async (ctx, next) => {
     try {
-      const blogs=await strapi.documents('api::blog.blog').findMany({
-        status:'draft'
+      const blogs = await strapi.documents('api::blog.blog').findMany({
+        status: 'draft'
       })
 
-      for(const blog of blogs){
-        console.log({blog});
+      for (const blog of blogs) {
+        console.log({ blog });
         // const updatedBlog=await strapi.documents('api::blog.blog').update({
         //   data:{
         //     publishedAt:new Date()
         //   },
         //   status:'published'
         // })
-        const updatedBlog=await strapi.documents('api::blog.blog').publish({
-          documentId:blog.documentId,
-          status:'published'
+        const updatedBlog = await strapi.documents('api::blog.blog').publish({
+          documentId: blog.documentId,
+          status: 'published'
         })
-        console.log({updatedBlog});
-        
+        console.log({ updatedBlog });
+
       }
 
-      ctx.body={
-        data:{
-          success:true,
-          msg:'Updated Successfully'
+      ctx.body = {
+        data: {
+          success: true,
+          msg: 'Updated Successfully'
         }
       }
     }
@@ -428,6 +446,6 @@ module.exports = {
         error: "Internal Server Error",
         details: err.message,
       };
-}
-}
+    }
+  }
 }
