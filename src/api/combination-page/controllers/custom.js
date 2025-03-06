@@ -381,6 +381,57 @@ module.exports = {
 
           return;
 
+          case `App\\Models\\Indus\\Brand`:
+            console.log('yes');
+            
+            const [data1, count1] = await Promise.all([strapi.documents('api::car.car').findMany({
+              filters: {
+                Brand: {
+                  Slug: fetchPage?.Slug
+                }
+              },
+              start: (page - 1) * limit,
+              limit: limit,
+              populate: {
+                Model:{
+                  populate:'*'
+                },
+                Brand: {
+                  populate: '*'
+                },
+                Location: {
+                  populate: '*'
+                },
+  
+              }
+            }), strapi.documents("api::car.car").count({
+              filters: {
+                Brand: {
+                  Slug: fetchPage?.Slug
+                }
+              },
+              populate:['Brand']
+            })])
+  
+            console.log({data1,count1});
+            
+  
+            ctx.status = 200;
+            ctx.body = {
+              data: data1, meta: {
+                pagination: {
+                  total: count1,
+                  page: page,
+                  pageSize: limit,
+                  pageCount: Math.ceil(data1.length / limit),
+                  last_page: Math.ceil(data1.length / limit),
+                }
+  
+              }
+            }
+  
+            return;
+
        
 
         default:
