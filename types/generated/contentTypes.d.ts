@@ -667,6 +667,7 @@ export interface ApiCombinationPageCombinationPage
   extends Struct.CollectionTypeSchema {
   collectionName: 'combination_pages';
   info: {
+    description: '';
     displayName: 'Combination Page';
     pluralName: 'combination-pages';
     singularName: 'combination-page';
@@ -682,6 +683,7 @@ export interface ApiCombinationPageCombinationPage
           preset: 'defaultHtml';
         }
       >;
+    Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -693,6 +695,8 @@ export interface ApiCombinationPageCombinationPage
       'api::combination-page.combination-page'
     > &
       Schema.Attribute.Private;
+    Location: Schema.Attribute.Relation<'oneToOne', 'api::location.location'>;
+    Model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
     Page_Heading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     Related_Type: Schema.Attribute.String;

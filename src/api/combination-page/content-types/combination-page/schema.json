@@ -4,7 +4,8 @@
   "info": {
     "singularName": "combination-page",
     "pluralName": "combination-pages",
-    "displayName": "Combination Page"
+    "displayName": "Combination Page",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -47,6 +48,21 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
+    },
+    "Location": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location.location"
+    },
+    "Brand": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::brand.brand"
+    },
+    "Model": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::model.model"
     }
   }
 }

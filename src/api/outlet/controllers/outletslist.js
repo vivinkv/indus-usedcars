@@ -38,6 +38,10 @@ module.exports = {
               Name:outlet?.Name 
             }
           },
+          pagination:{
+            start:page,
+            limit:pageSize
+          },
           populate:['Outlet'] 
         });
         return {
