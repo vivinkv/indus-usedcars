@@ -22,6 +22,16 @@ module.exports = {
     },
     {
       method: 'GET',
+      path: '/car-filter/search-model',
+      handler: 'car-filter.searchModel',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
       path: '/car-filter/static-content',
       handler: 'car-filter.allStaticContent',
       config: {

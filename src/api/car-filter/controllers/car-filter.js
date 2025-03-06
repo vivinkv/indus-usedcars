@@ -255,6 +255,113 @@ module.exports = {
       ctx.body = error;
     }
   },
+  searchModel: async (ctx, next) => {
+    try {
+      const { search, page = 1, limit = 10,brand } = ctx.query;
+      const pagination = {
+        page: parseInt(page),
+        pageSize: parseInt(limit),
+        start: (page - 1) * limit,
+        limit: parseInt(limit),
+      };
+
+      if(brand){
+        const [models,count]=await Promise.all([strapi.documents('api::model.model').findFirst({
+          filters:{
+            Brand:{
+              Slug:{
+                $eq:brand
+              }
+            }
+          },
+          pagination:{
+            page:page,
+            pageSize:limit,
+          },
+          populate:['Brand']
+        }),strapi.documents('api::model.model').count({
+          filters:{
+            Brand:{
+              Slug:{
+                $eq:brand
+              }
+            }
+          },
+          populate:['Brand']
+        })]);
+
+
+
+        ctx.status = 200;
+        ctx.body = {
+          data: models || [],
+          meta: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+            totalPage: Math.ceil(count / pagination.limit),
+            pageCount: count || 0,
+          },
+        };
+
+        return
+
+      }
+
+      let count = await strapi.documents("api::model.model").count();
+
+      let model; 
+      if (!search) {
+        model = await strapi.documents("api::model.model").findMany({
+          populate: "*",
+          limit: pagination.limit,
+          start: pagination.start,
+        });
+        console.log(model);
+
+        ctx.status = 200;
+        ctx.body = {
+          data: model || [],
+          meta: {
+            page: pagination.page,
+            pageSize: pagination.pageSize,
+            totalPage: Math.ceil(count / pagination.limit),
+            pageCount: count || 0,
+          },
+        };
+        return;
+      }
+
+      model = await strapi.documents("api::model.model").findMany({
+        filters: {
+          Name: {
+            $containsi: search,
+          },
+        },
+        limit: pagination.limit,
+        start: pagination.start,
+      });
+      count = await strapi.documents("api::model.model").count({
+        filters: {
+          Name: {
+            $containsi: search,
+          },
+        },
+      });
+      ctx.status = 200;
+      ctx.body = {
+        data: model || [],
+        meta: {
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          totalPage: Math.ceil(count / pagination.limit),
+          pageCount: count || 0,
+        },
+      };
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = error;
+    }
+  },
   allStaticContent:async(ctx,next)=>{
     try{
       const static_content = await strapi.documents('api::cars-listing.cars-listing').findFirst({
@@ -342,6 +449,7 @@ module.exports = {
     try {
       // const { location } = ctx.params;
       const {
+        model,
         location, 
         fuel,
         brand,
@@ -368,6 +476,24 @@ module.exports = {
         filters.Location = {
           Slug: location,
         };
+      }
+
+      if (model && model!== '[]') {
+        try {
+          // Remove brackets and split by comma
+          const cleanedModel = model.replace(/[\[\]{}]/g, "");
+          const modelArray = cleanedModel.split(",").map((m) => m.trim());
+
+          if (modelArray.length > 0 && modelArray[0]!== '') {
+            filters.Model = {
+              Name: {
+                $in: modelArray,
+              },
+            };
+          }
+        } catch (error) {
+          console.error("Error parsing model filter:", error);
+        }
       }
 
       if (fuel && fuel !== '[]') {

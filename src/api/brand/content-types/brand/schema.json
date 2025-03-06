@@ -33,6 +33,11 @@
     "Featured": {
       "type": "boolean",
       "default": false
+    },
+    "Model": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::model.model"
     }
   }
 }

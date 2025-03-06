@@ -477,6 +477,7 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::brand.brand'> &
       Schema.Attribute.Private;
+    Model: Schema.Attribute.Relation<'oneToMany', 'api::model.model'>;
     Name: Schema.Attribute.String & Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
     Slug: Schema.Attribute.UID<'Name'>;
@@ -1005,6 +1006,7 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
+    Brand: Schema.Attribute.Relation<'oneToOne', 'api::brand.brand'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
