@@ -339,20 +339,9 @@ module.exports = {
                 Slug: fetchPage?.Slug
               }
             },
-            start: (page - 1) * limit,
+            start: (page - 1) * limit, 
             limit: limit,
-            populate: {
-              Model:{
-                populate:'*'
-              },
-              Brand: {
-                populate: '*'
-              },
-              Location: {
-                populate: '*'
-              },
-
-            }
+            populate: ['Model']
           }), strapi.documents("api::car.car").count({
             filters: {
               Model: {
@@ -431,6 +420,56 @@ module.exports = {
             }
   
             return;
+
+            case `App\\Models\\Indus\\Variant`:
+              const [data2, count2] = await Promise.all([strapi.documents('api::car.car').findMany({
+                filters: {
+                  Variant:fetchPage?.Slug,
+                },
+                start: (page - 1) * limit,
+                limit: limit,
+                populate: {
+                  Model:{
+                    populate:'*'
+                  },
+                  Brand: {
+                    populate: '*'
+                  },
+                  Location: {
+                    populate: '*'
+                  },
+                  Fuel_Type:{
+                    populate:'*',
+                  },
+                  
+    
+                }
+              }), strapi.documents("api::car.car").count({
+                filters: {
+                  Brand: {
+                    Slug: fetchPage?.Slug
+                  }
+                },
+                populate:['Brand']
+              })])
+    
+              console.log({data2,count2});
+              
+    
+              ctx.status = 200;
+              ctx.body = {
+                data: data2, meta: {
+                  pagination: {
+                    total: count2,
+                    page: page,
+                    pageSize: limit,
+                    pageCount: Math.ceil(data2.length / limit),
+                    last_page: Math.ceil(data2.length / limit),
+                  }
+    
+                }
+              }
+              return
 
        
 

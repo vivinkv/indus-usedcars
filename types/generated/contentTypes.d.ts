@@ -697,6 +697,7 @@ export interface ApiCombinationPageCombinationPage
       Schema.Attribute.Private;
     Location: Schema.Attribute.Relation<'oneToOne', 'api::location.location'>;
     Model: Schema.Attribute.Relation<'oneToOne', 'api::model.model'>;
+    Outlet: Schema.Attribute.Relation<'oneToOne', 'api::outlet.outlet'>;
     Page_Heading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     Related_Type: Schema.Attribute.String;

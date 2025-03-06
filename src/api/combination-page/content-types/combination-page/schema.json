@@ -63,6 +63,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::model.model"
+    },
+    "Outlet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::outlet.outlet"
     }
   }
 }
