@@ -341,7 +341,7 @@ module.exports = {
             },
             start: (page - 1) * limit, 
             limit: limit,
-            populate: ['Model']
+            populate: ['Model','Brand']
           }), strapi.documents("api::car.car").count({
             filters: {
               Model: {
@@ -441,7 +441,7 @@ module.exports = {
                   Fuel_Type:{
                     populate:'*',
                   },
-                  
+
     
                 }
               }), strapi.documents("api::car.car").count({
@@ -470,6 +470,62 @@ module.exports = {
                 }
               }
               return
+
+              // case `App\\Models\\BrandDistrict`:
+
+              // if(fetchPage?.Brand != null && fetchPage?.Location != null ){
+
+              // }
+
+              // const [data3, count3] = await Promise.all([strapi.documents('api::car.car').findMany({
+              //   filters: {
+              //     Variant:fetchPage?.Slug,
+              //   },
+              //   start: (page - 1) * limit,
+              //   limit: limit,
+              //   populate: {
+              //     Model:{
+              //       populate:'*'
+              //     },
+              //     Brand: {
+              //       populate: '*'
+              //     },
+              //     Location: {
+              //       populate: '*'
+              //     },
+              //     Fuel_Type:{
+              //       populate:'*',
+              //     },
+
+    
+              //   }
+              // }), strapi.documents("api::car.car").count({
+              //   filters: {
+              //     Brand: {
+              //       Slug: fetchPage?.Slug
+              //     }
+              //   },
+              //   populate:['Brand']
+              // })])
+    
+              // console.log({data3,count3});
+              
+    
+              // ctx.status = 200;
+              // ctx.body = {
+              //   data: data3, meta: {
+              //     pagination: {
+              //       total: count3,
+              //       page: page,
+              //       pageSize: limit,
+              //       pageCount: Math.ceil(data3.length / limit),
+              //       last_page: Math.ceil(data3.length / limit),
+              //     }
+    
+              //   }
+              // }
+
+              //   return;
 
        
 
