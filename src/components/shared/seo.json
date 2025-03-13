@@ -8,12 +8,12 @@
   "options": {},
   "attributes": {
     "Meta_Title": {
-      "required": true,
-      "type": "string"
+      "required": false,
+      "type": "text"
     },
     "Meta_Description": {
       "type": "text",
-      "required": true
+      "required": false
     },
     "Meta_Image": {
       "type": "media",

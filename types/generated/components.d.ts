@@ -324,6 +324,67 @@ export interface ContactModalForm extends Struct.ComponentSchema {
   };
 }
 
+export interface DealerAdditionalDetails extends Struct.ComponentSchema {
+  collectionName: 'components_dealer_additional_details';
+  info: {
+    displayName: 'Additional Details';
+  };
+  attributes: {
+    Emails: Schema.Attribute.Component<'dealer.emails', true>;
+    Public_Number: Schema.Attribute.String;
+  };
+}
+
+export interface DealerDealer extends Struct.ComponentSchema {
+  collectionName: 'components_dealer_dealers';
+  info: {
+    description: '';
+    displayName: 'Dealer';
+  };
+  attributes: {
+    Address: Schema.Attribute.Text;
+    Email: Schema.Attribute.Email;
+    Landline: Schema.Attribute.String;
+    Latitude_Longitude: Schema.Attribute.String;
+    Location_Map: Schema.Attribute.Text;
+    Name: Schema.Attribute.String;
+  };
+}
+
+export interface DealerEmails extends Struct.ComponentSchema {
+  collectionName: 'components_dealer_emails';
+  info: {
+    displayName: 'Emails';
+  };
+  attributes: {
+    Email: Schema.Attribute.Email;
+  };
+}
+
+export interface DealerHead extends Struct.ComponentSchema {
+  collectionName: 'components_dealer_heads';
+  info: {
+    displayName: 'Head';
+  };
+  attributes: {
+    Email: Schema.Attribute.Email;
+    Mobile_Number: Schema.Attribute.String;
+    Name: Schema.Attribute.String;
+  };
+}
+
+export interface DealerManager extends Struct.ComponentSchema {
+  collectionName: 'components_dealer_managers';
+  info: {
+    displayName: 'Manager';
+  };
+  attributes: {
+    Email: Schema.Attribute.Email;
+    Mobile_Number: Schema.Attribute.String;
+    Name: Schema.Attribute.String;
+  };
+}
+
 export interface HomeBannerSection extends Struct.ComponentSchema {
   collectionName: 'components_home_banner_sections';
   info: {
@@ -583,10 +644,10 @@ export interface SharedSeo extends Struct.ComponentSchema {
   attributes: {
     CanonicalURL: Schema.Attribute.String;
     Keywords: Schema.Attribute.Text;
-    Meta_Description: Schema.Attribute.Text & Schema.Attribute.Required;
+    Meta_Description: Schema.Attribute.Text;
     Meta_Image: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     Meta_Robots: Schema.Attribute.String;
-    Meta_Title: Schema.Attribute.String & Schema.Attribute.Required;
+    Meta_Title: Schema.Attribute.Text;
     Meta_Viewport: Schema.Attribute.String;
     OG_Description: Schema.Attribute.Text;
     OG_Title: Schema.Attribute.String;
@@ -697,6 +758,11 @@ declare module '@strapi/strapi' {
       'contact.certified-excellence': ContactCertifiedExcellence;
       'contact.image-section': ContactImageSection;
       'contact.modal-form': ContactModalForm;
+      'dealer.additional-details': DealerAdditionalDetails;
+      'dealer.dealer': DealerDealer;
+      'dealer.emails': DealerEmails;
+      'dealer.head': DealerHead;
+      'dealer.manager': DealerManager;
       'home.banner-section': HomeBannerSection;
       'home.buy-and-sell-section': HomeBuyAndSellSection;
       'home.car-journey': HomeCarJourney;

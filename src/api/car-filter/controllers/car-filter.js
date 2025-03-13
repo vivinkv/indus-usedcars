@@ -270,7 +270,7 @@ module.exports = {
           filters:{
             Brand:{
               Slug:{
-                $eq:brand
+                $containsi:brand
               }
             }
           },
@@ -283,7 +283,7 @@ module.exports = {
           filters:{
             Brand:{
               Slug:{
-                $eq:brand
+                $containsi:brand
               }
             }
           },
