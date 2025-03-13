@@ -367,7 +367,7 @@ module.exports = {
 
       // Fetch paginated results
       const results = await strapi.documents("api::blog.blog").findMany({
-        start: Number(start),
+        start: (Number(start)-1)*Number(limit),
         limit: Number(limit),
         status: "published",
         populate: {

@@ -473,8 +473,11 @@ module.exports = {
 
       // Add location filter based on slug
       if (location) {
-        filters.Location = {
-          Slug: location,
+        filters.Outlet = {
+          Location:{
+            Slug: location,
+          }
+          
         };
       }
 

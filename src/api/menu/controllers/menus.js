@@ -23,7 +23,12 @@ module.exports = {
           Footer: {
             populate: {
               Page: {
-                populate: "*",
+                populate:{
+                  Links:{
+                    populate: "*"
+                  }
+                }
+                
               },
             },
           },
