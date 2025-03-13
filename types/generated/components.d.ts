@@ -410,6 +410,7 @@ export interface MenuHeader extends Struct.ComponentSchema {
 export interface MenuLinks extends Struct.ComponentSchema {
   collectionName: 'components_menu_links';
   info: {
+    description: '';
     displayName: 'Links';
   };
   attributes: {
@@ -427,6 +428,14 @@ export interface MenuLocation extends Struct.ComponentSchema {
     Label: Schema.Attribute.String;
     URL: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
   };
+}
+
+export interface MenuMenuLinks extends Struct.ComponentSchema {
+  collectionName: 'components_menu_menu_links';
+  info: {
+    displayName: 'Menu Links';
+  };
+  attributes: {};
 }
 
 export interface MenuPage extends Struct.ComponentSchema {
@@ -697,6 +706,7 @@ declare module '@strapi/strapi' {
       'menu.header': MenuHeader;
       'menu.links': MenuLinks;
       'menu.location': MenuLocation;
+      'menu.menu-links': MenuMenuLinks;
       'menu.page': MenuPage;
       'offer.exclusive-deals-section': OfferExclusiveDealsSection;
       'offer.offer-section': OfferOfferSection;
