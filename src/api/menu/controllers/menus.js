@@ -21,25 +21,7 @@ module.exports = {
             populate: "*",
           },
           Footer: {
-            populate: {
-              Page: {
-                Links:{
-                  Brands:{
-                    populate: "*"
-                  },
-                  Static_Pages:{
-                    populate: "*"
-                  },
-                  Showrooms:{
-                    populate: "*"
-                  },
-                 Combination_Pages:{
-                  populate:'*'
-                 }
-                }
-               
-              },
-            },
+            populate: '*',
           },
         },
       });
