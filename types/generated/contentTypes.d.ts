@@ -781,6 +781,37 @@ export interface ApiContactContact extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiDealerDealer extends Struct.SingleTypeSchema {
+  collectionName: 'dealers';
+  info: {
+    displayName: 'Dealer';
+    pluralName: 'dealers';
+    singularName: 'dealer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dealer.dealer'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
+    Short_Title: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiFuelTypeFuelType extends Struct.CollectionTypeSchema {
   collectionName: 'fuel_types';
   info: {
@@ -1792,6 +1823,7 @@ declare module '@strapi/strapi' {
       'api::combination-page.combination-page': ApiCombinationPageCombinationPage;
       'api::contact-form-ui.contact-form-ui': ApiContactFormUiContactFormUi;
       'api::contact.contact': ApiContactContact;
+      'api::dealer.dealer': ApiDealerDealer;
       'api::fuel-type.fuel-type': ApiFuelTypeFuelType;
       'api::general.general': ApiGeneralGeneral;
       'api::home.home': ApiHomeHome;
