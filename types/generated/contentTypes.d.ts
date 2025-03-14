@@ -912,6 +912,7 @@ export interface ApiGeneralGeneral extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Badge: Schema.Attribute.Media<'images' | 'files'>;
     Contact: Schema.Attribute.Component<'settings.contact', false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

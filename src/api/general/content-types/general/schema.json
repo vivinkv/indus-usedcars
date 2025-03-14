@@ -66,6 +66,14 @@
     "Link": {
       "type": "string",
       "default": "#"
+    },
+    "Badge": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }
