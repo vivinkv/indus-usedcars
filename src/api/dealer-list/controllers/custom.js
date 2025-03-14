@@ -8,7 +8,23 @@ const axios = require("axios");
 
 module.exports = {
 
-  fetchDealers:async(ctx,next)=>{
+  fetchDealers:async(ctx,next)=>{    
+    const verifyAndTransformSlug = (slug) => {
+      if (!slug) return "";
+      
+      // Convert to string and lowercase
+      let transformedSlug = String(slug).toLowerCase();
+      
+      // Replace invalid characters with hyphens
+      transformedSlug = transformedSlug
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+      
+      // Limit length to 100 characters
+      return transformedSlug.substring(0, 100);
+    };
+
     try {
       const fetchDealerAPI=await axios.get('https://indususedcars.com/api/dealers');
       const dealerList=fetchDealerAPI.data;
@@ -30,10 +46,11 @@ module.exports = {
             }
           })
           
+          const transformedSlug = verifyAndTransformSlug(dealer?.meta_data?.slug);
           const createDealer=await strapi.documents('api::dealer-list.dealer-list').create({
             data:{
               Page_Heading:dealer?.meta_data?.page_heading,
-              Slug:dealer?.meta_data?.slug,
+              Slug:transformedSlug,
               Top_Description:dealer?.meta_data?.top_description,
               Bottom_Description:dealer?.meta_data?.bottom_description,
               Related_Type:dealer?.meta_data?.related_type,
@@ -80,7 +97,7 @@ module.exports = {
         console.log(dealer?.meta_data?.slug);
         
         const updateData = {
-          Slug: dealer?.meta_data?.slug,
+          Slug: verifyAndTransformSlug(dealer?.meta_data?.slug),
         };
 
         if (findLocation?.documentId) {
@@ -244,7 +261,9 @@ module.exports = {
   },
   detail:async(ctx,next)=>{
     try {
+     
       const {slug}=ctx.params;
+      console.log(slug);
       const dealer=await strapi.documents('api::dealer-list.dealer-list').findFirst({
         filters:{
           Slug:slug
