@@ -11,50 +11,48 @@ module.exports = {
   fetchDealers: async (ctx, next) => {
     const verifyAndTransformSlug = (slug) => {
       if (!slug) return "";
-
-      // Convert to string and lowercase
       let transformedSlug = String(slug).toLowerCase();
-
-      // Replace invalid characters with hyphens
       transformedSlug = transformedSlug
         .replace(/[^a-z0-9-]/g, '-')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
-
-      // Limit length to 100 characters
       return transformedSlug.substring(0, 100);
     };
 
     try {
       const fetchDealerAPI = await axios.get('https://indususedcars.com/api/dealers');
       const dealerList = fetchDealerAPI.data;
-
+      
+      console.log('Total dealers to process:', dealerList.length);
 
       for (const dealer of dealerList) {
-        console.log(dealer?.meta_data?.slug);
-        const findDealer = await strapi.documents('api::dealer-list.dealer-list').findFirst({
-          filters: {
-            Slug: dealer?.meta_data?.slug
-          }
-        })
-
-        if (!findDealer) {
-          console.log('yes inside');
-
-
-          const findOutlet = await strapi.documents('api::outlet.outlet').findFirst({
+        try {
+          console.log('Processing dealer:', dealer?.dealership_name);
+          const findDealer = await strapi.documents('api::dealer-list.dealer-list').findFirst({
             filters: {
-              Slug: dealer?.location?.slug
-            },
-            populate: {
-              Location: {
-                populate: '*'
+              Slug: dealer?.meta_data?.slug
+            }
+          });
+
+          if (!findDealer) {
+            let outletData = null;
+            if (dealer?.location?.slug) {
+              const findOutlet = await strapi.documents('api::outlet.outlet').findFirst({
+                filters: {
+                  Slug: dealer?.location?.slug
+                },
+                populate: {
+                  Location: {
+                    populate: '*'
+                  }
+                }
+              });
+              if (findOutlet) {
+                outletData = findOutlet;
               }
             }
-          })
 
-          if (findOutlet) {
-            const transformedSlug = verifyAndTransformSlug(dealer?.meta_data?.slug);
+            const transformedSlug = verifyAndTransformSlug(dealer?.meta_data?.slug || dealer?.dealership_name);
             const createDealer = await strapi.documents('api::dealer-list.dealer-list').create({
               data: {
                 Page_Heading: dealer?.meta_data?.page_heading,
@@ -62,7 +60,7 @@ module.exports = {
                 Top_Description: dealer?.meta_data?.top_description,
                 Bottom_Description: dealer?.meta_data?.bottom_description,
                 Related_Type: dealer?.meta_data?.related_type,
-                Outlet: findOutlet,
+                Outlet: outletData, // Will be null if no outlet found
                 Dealer_Detail: {
                   Name: dealer?.dealership_name,
                   Address: dealer?.address,
@@ -95,50 +93,22 @@ module.exports = {
               },
               populate: ['Dealer_Detail', 'Head', 'Manager', 'Additional', 'SEO'],
               status: 'published'
-            })
+            });
+            console.log('Created dealer:', transformedSlug);
           }
-
-
-
-        } else {
-          const findOutlet = await strapi.documents('api::outlet.outlet').findFirst({
-            filters: {
-              Slug: dealer?.location?.slug
-            }
-          })
-          console.log(dealer?.meta_data?.slug);
-
-          const updateData = {
-            Slug: verifyAndTransformSlug(dealer?.meta_data?.slug),
-          };
-
-          if (findOutlet?.documentId) {
-            updateData.Outlet = findOutlet;
-          }
-
-          const updateDealer = await strapi.documents('api::dealer-list.dealer-list').update({
-            documentId: findDealer?.documentId,
-            data: updateData,
-            populate: ['Dealer_Detail', 'Head', 'Manager', 'Additional', 'SEO', 'Outlet'],
-            status: 'published'
-          })
-
-          console.log('yes updated successfully');
-
-
-
+        } catch (dealerError) {
+          console.error('Error processing dealer:', dealer?.dealership_name, dealerError);
+          // Continue with next dealer even if one fails
+          continue;
         }
-
-
-
       }
 
       ctx.status = 200;
       ctx.body = {
         data: 'Dealer List Created Successfully'
-      }
-    }
-    catch (err) {
+      };
+    } catch (err) {
+      console.error('Main error:', err);
       ctx.status = 500;
       ctx.body = err;
     }
