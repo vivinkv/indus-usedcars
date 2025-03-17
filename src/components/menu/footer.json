@@ -11,6 +11,24 @@
       "type": "component",
       "repeatable": true,
       "component": "menu.page"
+    },
+    "Location_Showrooms": {
+      "displayName": "Showroom",
+      "type": "component",
+      "repeatable": false,
+      "component": "footer.showroom"
+    },
+    "Brand": {
+      "displayName": "Brand",
+      "type": "component",
+      "repeatable": false,
+      "component": "footer.brand"
+    },
+    "Customer_Support": {
+      "displayName": "Customer Support",
+      "type": "component",
+      "repeatable": false,
+      "component": "footer.customer-support"
     }
   }
 }

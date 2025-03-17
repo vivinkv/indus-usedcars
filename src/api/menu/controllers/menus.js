@@ -30,6 +30,15 @@ module.exports = {
                 }
                 
               },
+              Location_Showrooms:{
+                populate:'*'
+              },
+              Brand:{
+                populate:"*"
+              },
+              Customer_Support:{
+                populate:'*'
+              }
             },
           },
         },

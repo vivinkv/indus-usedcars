@@ -385,6 +385,42 @@ export interface DealerManager extends Struct.ComponentSchema {
   };
 }
 
+export interface FooterBrand extends Struct.ComponentSchema {
+  collectionName: 'components_footer_brands';
+  info: {
+    displayName: 'Brand';
+  };
+  attributes: {
+    Brands: Schema.Attribute.Relation<'oneToMany', 'api::brand.brand'>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FooterCustomerSupport extends Struct.ComponentSchema {
+  collectionName: 'components_footer_customer_supports';
+  info: {
+    displayName: 'Customer Support';
+  };
+  attributes: {
+    Static_Pages: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::static-page.static-page'
+    >;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FooterShowroom extends Struct.ComponentSchema {
+  collectionName: 'components_footer_showrooms';
+  info: {
+    displayName: 'Showroom';
+  };
+  attributes: {
+    Locations: Schema.Attribute.Relation<'oneToMany', 'api::location.location'>;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface HomeBannerSection extends Struct.ComponentSchema {
   collectionName: 'components_home_banner_sections';
   info: {
@@ -451,6 +487,12 @@ export interface MenuFooter extends Struct.ComponentSchema {
     displayName: 'Footer';
   };
   attributes: {
+    Brand: Schema.Attribute.Component<'footer.brand', false>;
+    Customer_Support: Schema.Attribute.Component<
+      'footer.customer-support',
+      false
+    >;
+    Location_Showrooms: Schema.Attribute.Component<'footer.showroom', false>;
     Page: Schema.Attribute.Component<'menu.page', true>;
   };
 }
@@ -763,6 +805,9 @@ declare module '@strapi/strapi' {
       'dealer.emails': DealerEmails;
       'dealer.head': DealerHead;
       'dealer.manager': DealerManager;
+      'footer.brand': FooterBrand;
+      'footer.customer-support': FooterCustomerSupport;
+      'footer.showroom': FooterShowroom;
       'home.banner-section': HomeBannerSection;
       'home.buy-and-sell-section': HomeBuyAndSellSection;
       'home.car-journey': HomeCarJourney;
