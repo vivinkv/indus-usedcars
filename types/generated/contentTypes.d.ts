@@ -1190,6 +1190,37 @@ export interface ApiOutletOutlet extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRedirectionRedirection extends Struct.CollectionTypeSchema {
+  collectionName: 'redirections';
+  info: {
+    description: '';
+    displayName: '301 Redirects';
+    pluralName: 'redirections';
+    singularName: 'redirection';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Destination_URL: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::redirection.redirection'
+    > &
+      Schema.Attribute.Private;
+    Permanent: Schema.Attribute.Boolean;
+    publishedAt: Schema.Attribute.DateTime;
+    Source_URL: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiResponsePageResponsePage
   extends Struct.CollectionTypeSchema {
   collectionName: 'response_pages';
@@ -1888,6 +1919,7 @@ declare module '@strapi/strapi' {
       'api::menu.menu': ApiMenuMenu;
       'api::model.model': ApiModelModel;
       'api::outlet.outlet': ApiOutletOutlet;
+      'api::redirection.redirection': ApiRedirectionRedirection;
       'api::response-page.response-page': ApiResponsePageResponsePage;
       'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
