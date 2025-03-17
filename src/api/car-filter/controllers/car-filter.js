@@ -272,6 +272,10 @@ module.exports = {
           const brandArray = cleanedBrand.split(",").map(b => b.trim());
 
           if (brandArray.length > 0 && brandArray[0] !== '') {
+            console.log(
+              'yes'
+            );
+            
             const [models, count] = await Promise.all([
               strapi.documents('api::model.model').findMany({
                 filters: {
@@ -345,6 +349,7 @@ module.exports = {
         },
         limit: pagination.limit,
         start: pagination.start,
+        populate:['Brand']
       });
       count = await strapi.documents("api::model.model").count({
         filters: {
