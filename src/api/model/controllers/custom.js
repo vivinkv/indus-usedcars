@@ -175,7 +175,8 @@ module.exports = {
         }
 
       }
-
+      console.log('completed');
+      
       ctx.status=200;
       ctx.body={
         msg:'success'
