@@ -12,5 +12,15 @@ module.exports={
                 middlewares: [],
             }
         },
+        {
+            method: 'GET',
+            path: '/models/addbrand',
+            handler: 'custom.addBrand',
+            config: {
+                auth:false,
+                policies: [],
+                middlewares: [],
+            }
+        },
     ],
 }

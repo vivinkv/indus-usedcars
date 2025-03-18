@@ -102,11 +102,8 @@ module.exports = {
       })
 
       const newlyadded=await strapi.documents("api::car.car").findMany({
-        filters: {
-          createdAt: {
-            $gt: new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toISOString()
-          }
-        },
+        filters:{},
+        sort: { createdAt: 'desc' },
         populate:['Brand','Model','Outlet','Fuel_Type','Image'],
         limit: 20
       })

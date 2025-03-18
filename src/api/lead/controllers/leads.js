@@ -23,7 +23,7 @@ module.exports = {
       console.log(ctx.request.body);
 
       // Validate required fields
-      if (!name || !lead_type || !phone_number || !city || !recaptcha_token) {
+      if (!name || !lead_type || !phone_number || !recaptcha_token) {
         ctx.status = 400;
         ctx.body = {
           message: "All fields including recaptcha are required",

@@ -136,4 +136,54 @@ module.exports = {
       ctx.body = err;
     }
   },
+  addBrand:async(ctx,next)=>{
+    console.log('brand');
+    
+    try {
+      const models=await strapi.documents('api::model.model').findMany({
+        filters:{},
+        populate:'*'
+      })
+      console.log(models);
+      
+
+      for(const model of models){
+        const findModel=await strapi.documents('api::car.car').findFirst({
+         filters:{
+          Model:{
+            Slug:{
+              $eq:model.Slug
+            }
+          }
+         },
+          populate:'*' 
+        })
+        console.log({model:findModel});
+        
+
+        if(findModel?.Brand){
+          console.log('yes');
+          
+          await strapi.documents('api::model.model').update({
+            documentId:model.documentId,
+            data:{
+              Brand:findModel?.Brand
+            },
+            status:'published',
+            populate:['Brand']
+          })
+        }
+
+      }
+
+      ctx.status=200;
+      ctx.body={
+        msg:'success'
+      };
+
+    } catch (error) {
+      ctx.status=500;
+      ctx.body=error;
+    }
+  }
 };
