@@ -30,7 +30,8 @@
       "enum": [
         "Buy",
         "Sell",
-        "Book"
+        "Book",
+        "Contact"
       ]
     },
     "Date": {
