@@ -1,7 +1,8 @@
 {
   "collectionName": "components_home_buy_and_sell_sections",
   "info": {
-    "displayName": "Buy And Sell Section"
+    "displayName": "Buy And Sell Section",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -9,17 +10,25 @@
       "type": "string"
     },
     "Image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "Button": {
       "type": "component",
       "repeatable": false,
       "component": "button.button"
+    },
+    "Navigation_Link": {
+      "type": "string",
+      "default": "#"
+    },
+    "Content": {
+      "type": "text"
     }
   }
 }

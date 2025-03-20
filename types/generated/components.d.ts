@@ -435,11 +435,14 @@ export interface HomeBannerSection extends Struct.ComponentSchema {
 export interface HomeBuyAndSellSection extends Struct.ComponentSchema {
   collectionName: 'components_home_buy_and_sell_sections';
   info: {
+    description: '';
     displayName: 'Buy And Sell Section';
   };
   attributes: {
     Button: Schema.Attribute.Component<'button.button', false>;
+    Content: Schema.Attribute.Text;
     Image: Schema.Attribute.Media<'images' | 'files'>;
+    Navigation_Link: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
     Title: Schema.Attribute.String;
   };
 }
