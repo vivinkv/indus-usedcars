@@ -360,7 +360,7 @@ module.exports = {
     try {
       console.log('working');
 
-      const { start = 0, limit = 10 } = ctx.query;
+      const { start = 1, limit = 10 } = ctx.query;
 
       // Get total count of blogs
       const total = await strapi.documents("api::blog.blog").count();
@@ -396,7 +396,7 @@ module.exports = {
         meta: {
           pagination: {
             firstPage: 1,
-            current_page: Number(start) + 1,
+            current_page: Number(start),
             limit: Number(limit),
             total: total,
             lastPage: Math.ceil(total / Number(limit)),
