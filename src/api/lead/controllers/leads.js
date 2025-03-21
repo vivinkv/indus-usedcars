@@ -50,9 +50,22 @@ module.exports = {
       if(car_id){
         console.log('yes');
         
-        car=await strapi.documents('car.car').findOne({
+        car=await strapi.documents('api::car.car').findOne({
           documentId:car_id,
-          populate:'*'
+          populate:{
+            Brand:{
+              populate:'*'
+            },
+            Model:{
+              populate:'*'
+            },
+            Location:{
+              populate:'*'
+            },
+            Outlet:{
+              populate:'*'
+            }
+          }
         });
 
         console.log({car});
