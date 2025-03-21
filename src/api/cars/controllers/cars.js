@@ -286,7 +286,7 @@ module.exports = {
       for (let car of cars) {
         console.log(car);
 
-        const slug = slugify(`${car.Name}-${car.Vehicle_Reg_No}`, {
+        const slug = slugify(`${car.Name}-${car.documentId}`, {
           replacement: "-",
           remove: undefined,
           lower: true,

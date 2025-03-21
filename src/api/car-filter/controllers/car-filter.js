@@ -470,6 +470,7 @@ module.exports = {
         price,
         page = 1,
         pageSize = 10,
+        high
       } = ctx.query;
       console.log(ctx.query);
       console.log({fuel:fuel?.length,brand:brand?.length,transmission:transmission?.length,year:year?.length,kilometers:kilometers?.length,price:price?.length});
@@ -621,7 +622,7 @@ module.exports = {
         strapi.documents("api::car.car").findMany({
           filters: Object.keys(filters).length > 0 ? filters : undefined,
           populate: ["Brand", "Model", "Outlet", "Fuel_Type", "Image"],
-          sort:'PSP:asc',
+          sort:`PSP:${high? 'desc':'asc'}`,
           limit,
           start,
         }),
