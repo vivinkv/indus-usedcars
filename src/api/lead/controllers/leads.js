@@ -17,7 +17,8 @@ module.exports = {
         phone_number,
         city,
         recaptcha_token,
-        source_url
+        source_url,
+        car_id
       } = ctx.request.body;
 
       console.log(ctx.request.body);
@@ -44,16 +45,53 @@ module.exports = {
         return;
       }
 
+      let car;
+
+      if(car_id){
+        car=await strapi.documents('car.car').findOne({
+          documentId:car_id,
+          populate:{
+            Brand:{
+              populate:'*'
+            },
+            Model:{
+              populate:'*'
+            },
+            Location:{
+              populate:'*'
+            },
+            Outlet:{
+              populate:'*'
+            }
+          }
+        });
+      }
+
       // Create lead based on type
-      const leadData = {
+     let leadData = {
         CustomerName: name,
         MobileNumber: phone_number,
         City: city,
         Lead_Type: lead_type,
         utmSource: utmsource,
         SourceType: source_type,
-        SourceURL:source_url
+        SourceURL:source_url,
+        
       };
+
+      if(lead_type == 'Test Drive'){
+        
+        leadData.Car={
+          Name:car?.Name,
+          Model:car?.Model?.Name,
+          Brand:car?.Brand?.Name,
+          Variant:car?.Variant,
+          Registration:car?.Vehicle_Reg_No,
+          Outlet:car?.Outlet?.Name,
+          Color:car?.Color,
+          Location:car?.Location?.Name
+        }
+      }
 
       if (lead_type === "Book") {
         leadData.Date = new Date().toISOString().slice(0, 10);

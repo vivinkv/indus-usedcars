@@ -621,6 +621,7 @@ module.exports = {
         strapi.documents("api::car.car").findMany({
           filters: Object.keys(filters).length > 0 ? filters : undefined,
           populate: ["Brand", "Model", "Outlet", "Fuel_Type", "Image"],
+          sort:'PSP:asc',
           limit,
           start,
         }),

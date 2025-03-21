@@ -315,7 +315,8 @@ module.exports = {
           Model: {
             populate: '*'
           }
-        }
+        },
+        sort:'PSP:asc'
       });
 
       console.log(fetchPage);

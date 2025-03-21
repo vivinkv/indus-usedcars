@@ -31,7 +31,8 @@
         "Buy",
         "Sell",
         "Book",
-        "Contact"
+        "Contact",
+        "Test Drive"
       ]
     },
     "Date": {
@@ -56,6 +57,9 @@
     },
     "SourceURL": {
       "type": "string"
+    },
+    "Car": {
+      "type": "json"
     }
   }
 }

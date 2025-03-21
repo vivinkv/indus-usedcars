@@ -5,6 +5,7 @@ module.exports = {
      path: '/getcars',
      handler: 'cars.getCars',
      config: {
+      auth:false,
        policies: [],
        middlewares: [],
      },
