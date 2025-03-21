@@ -977,7 +977,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     CustomerName: Schema.Attribute.String & Schema.Attribute.Required;
     Date: Schema.Attribute.Date;
     Lead_Type: Schema.Attribute.Enumeration<
-      ['Buy', 'Sell', 'Book', 'Contact', 'Test Drive']
+      ['Buy', 'Sell', 'Book', 'Contact', 'Test Drive', 'Request Callback']
     >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::lead.lead'> &

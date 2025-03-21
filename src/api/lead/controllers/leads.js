@@ -48,6 +48,8 @@ module.exports = {
       let car;
 
       if(car_id){
+        console.log('yes');
+        
         car=await strapi.documents('car.car').findOne({
           documentId:car_id,
           populate:{
@@ -65,6 +67,9 @@ module.exports = {
             }
           }
         });
+
+        console.log({car});
+        
       }
 
       // Create lead based on type
@@ -80,6 +85,8 @@ module.exports = {
       };
 
       if(lead_type == 'Test Drive'){
+        console.log('yes');
+        
         
         leadData.Car={
           Name:car?.Name,
@@ -91,6 +98,21 @@ module.exports = {
           Color:car?.Color,
           Location:car?.Location?.Name
         }
+        console.log(leadData);
+      const data=  await strapi.documents("api::lead.lead").create({
+          data: leadData,
+          status: "published",
+        });
+        console.log({data});
+        
+        ctx.status = 200;
+        ctx.body = {
+          message: "Form Submitted Successfully",
+          success: true,
+        };
+
+        return;
+        
       }
 
       if (lead_type === "Book") {
@@ -110,6 +132,8 @@ module.exports = {
         success: true,
       };
     } catch (err) {
+      console.log(err);
+      console.log(err?.message);
       ctx.status = 500;
       ctx.body = {
         success: false,
