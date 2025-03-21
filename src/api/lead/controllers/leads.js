@@ -86,6 +86,7 @@ module.exports = {
 
       if(lead_type == 'Test Drive'){
         console.log('yes');
+        console.log({car});
         
         
         leadData.Car={
