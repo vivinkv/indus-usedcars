@@ -63,7 +63,11 @@ module.exports = {
               populate:'*'
             },
             Outlet:{
-              populate:'*'
+              populate:{
+                Location:{
+                  populate:'*'
+                }
+              }
             }
           }
         });
@@ -97,7 +101,7 @@ module.exports = {
           Registration:car?.Vehicle_Reg_No,
           Outlet:car?.Outlet?.Name,
           Color:car?.Color,
-          Location:car?.Location?.Name
+          Location:car?.Outlet?.Location?.Name,
         }
         console.log(leadData);
       const data=  await strapi.documents("api::lead.lead").create({
