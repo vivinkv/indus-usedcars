@@ -48,7 +48,11 @@ module.exports = {
             populate: "*",
           },
           Find_More: {
-            populate: "*",
+            populate: {
+              Link:{
+                populate:'*'
+              }
+            },
           },
           Location: {
             populate: "*",
