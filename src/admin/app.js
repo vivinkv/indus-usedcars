@@ -19,7 +19,7 @@ const config = {
   translations: {
     en: {
       "app.components.LeftMenu.navbrand.title": "Indus Motors Dashboard",
-      "app.components.LeftMenu.navbrand.workplace": "Production",
+      "app.components.LeftMenu.navbrand.workplace": "Administration",
       "Auth.form.welcome.title": "Welcome to Indus Motors",
       "Auth.form.register.subtitle":
         "Credentials are only used for secure login to Indus Motors Dashboard. All your personal details and vehicle information will be securely stored in our database.",

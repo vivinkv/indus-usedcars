@@ -84,13 +84,17 @@ export interface CarBasicInformation extends Struct.ComponentSchema {
 export interface CarFindMoreSection extends Struct.ComponentSchema {
   collectionName: 'components_car_find_more_sections';
   info: {
+    description: '';
     displayName: 'Find More Section';
   };
   attributes: {
     Content: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files'>;
+    Link: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::combination-page.combination-page'
+    >;
     Title: Schema.Attribute.String;
-    URL: Schema.Attribute.String;
   };
 }
 
