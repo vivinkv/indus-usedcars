@@ -49,6 +49,9 @@ module.exports = {
           },
           Find_More: {
             populate: {
+              Icon:{
+                populate:'*'
+              },
               Link:{
                 populate:'*'
               }
