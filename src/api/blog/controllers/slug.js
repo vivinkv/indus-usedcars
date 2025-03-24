@@ -318,7 +318,7 @@ module.exports = {
               await strapi.documents('api::blog.blog').update({
                 documentId: findBlog.documentId,
                 data: {
-                  publishedAt: blogDetail?.published_at,
+                  publishedAt: blogDetail?.created_at,
                   createdAt: blogDetail?.created_at
                 },
                 status: 'published'
