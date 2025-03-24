@@ -165,9 +165,7 @@ module.exports = {
             </head>
             <body>
               <div class="container">
-                <div class="header">
-                  <img src="/admin/extensions/logo.png" alt="Indus Motors Logo">
-                </div>
+               
                 <div class="content">
                   <h2>New Test Drive Request</h2>
                   <div class="details">
@@ -226,9 +224,7 @@ module.exports = {
             </head>
             <body>
               <div class="container">
-                <div class="header">
-                  <img src="/admin/extensions/logo.png" alt="Indus Motors Logo">
-                </div>
+               
                 <div class="content">
                   <h2>Test Drive Request Confirmation</h2>
                   <div class="message">
@@ -253,7 +249,7 @@ module.exports = {
           adminEmailSubject = 'New Car Booking Request';
           adminEmailTemplate = `
             <div style="max-width: 600px; margin: 0 auto;">
-              <img src="/admin/extensions/logo.png" alt="Indus Motors Logo" style="width: 200px; height: auto; margin-bottom: 20px;">
+             
               <h2>New Car Booking Request</h2>
               <p>Customer Details:</p>
               <ul>
@@ -271,7 +267,7 @@ module.exports = {
           userEmailSubject = 'Booking Request Confirmation';
           userEmailTemplate = `
             <div style="max-width: 600px; margin: 0 auto;">
-              <img src="/admin/extensions/logo.png" alt="Indus Motors Logo" style="width: 200px; height: auto; margin-bottom: 20px;">
+             
               <h2>Booking Request Confirmation</h2>
               <p>Dear ${name},</p>
               <p>Thank you for your booking request. We have received your request and our team will contact you shortly at ${phone_number}.</p>
@@ -382,7 +378,7 @@ module.exports = {
           if (admin?.email) {
             await strapi.plugins['email'].services.email.send({
               to: admin.email,
-              from: process.env.SMTP_USERNAME,
+              from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`,
               subject: adminEmailSubject,
               text: adminEmailSubject, // Plain text version
               html: adminEmailTemplate,
@@ -396,7 +392,7 @@ module.exports = {
           if (email) {
             await strapi.plugins['email'].services.email.send({
               to: email,
-              from: process.env.SMTP_USERNAME,
+              from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`,
               subject: userEmailSubject,
               text: userEmailSubject, // Plain text version
               html: userEmailTemplate,
