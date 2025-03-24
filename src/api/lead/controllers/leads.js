@@ -24,7 +24,7 @@ module.exports = {
       console.log(ctx.request.body);
 
       // Validate required fields
-      if (!name || !lead_type || !phone_number) {
+      if (!name || !lead_type || !phone_number||!recaptcha_token) {
         ctx.status = 400;
         ctx.body = {
           message: "All fields including recaptcha are required",
@@ -33,17 +33,17 @@ module.exports = {
       }
 
       // Verify reCAPTCHA token
-      // const recaptchaSecret = process.env.RECAPTCHA_SECRECT_KEY;
-      // const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptcha_token}`;
+      const recaptchaSecret = process.env.RECAPTCHA_SECRECT_KEY;
+      const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptcha_token}`;
       
-      // const recaptchaResponse = await axios.post(verificationUrl);
-      // if (!recaptchaResponse.data.success) {
-      //   ctx.status = 400;
-      //   ctx.body = {
-      //     message: "reCAPTCHA verification failed",
-      //   };
-      //   return; 
-      // }
+      const recaptchaResponse = await axios.post(verificationUrl);
+      if (!recaptchaResponse.data.success) {
+        ctx.status = 400;
+        ctx.body = {
+          message: "reCAPTCHA verification failed",
+        };
+        return;
+      }
 
       let car;
 

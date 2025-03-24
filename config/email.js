@@ -1,5 +1,5 @@
 module.exports = {
-  // provider: '@strapi/provider-email-nodemailer',
+  provider: 'nodemailer',
   providerOptions: {
     host: 'smtp.gmail.com',
     port: 587,

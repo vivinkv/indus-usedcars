@@ -7,6 +7,7 @@ module.exports = () => ({
   },
   email: {
     config: {
+      provider: 'nodemailer',
       providerOptions: {
         host: 'smtp.gmail.com',
         port: 587,
