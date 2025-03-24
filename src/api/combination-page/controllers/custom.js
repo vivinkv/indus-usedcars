@@ -241,6 +241,11 @@ module.exports = {
       const data = await strapi
         .documents("api::combination-page.combination-page")
         .findMany({
+          populate:{
+            Link:{
+              populate:'*'
+            }
+          },
           start: (page - 1) * limit,
           limit: limit,
         });
