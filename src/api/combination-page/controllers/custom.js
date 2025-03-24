@@ -330,7 +330,7 @@ module.exports = {
               populate: "*",
             },
           },
-          sort: `PSP:${high ? "desc" : "asc"}`,
+          
         });
 
       console.log(fetchPage);
