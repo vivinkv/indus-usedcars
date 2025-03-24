@@ -7,13 +7,12 @@ module.exports = () => ({
   },
   email: {
     config: {
-      provider: '@strapi/provider-email-nodemailer',
       providerOptions: {
         host: 'smtp.gmail.com',
         port: 587,
         auth: {
           user: process.env.SMTP_USERNAME,
-          pass: process.env.SMTP_PASSWORD
+          pass: process.env.SMTP_PASSWORD,
         }
       },
       settings: {
