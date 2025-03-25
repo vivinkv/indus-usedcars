@@ -225,6 +225,8 @@ module.exports = {
                     `https://indususedcars.com/api/pages/${blog?.slug}`
                   )
                 ).data;
+                
+                updateData.Content=blogDetail?.content || '';
 
                 const featuredImageId = await uploadWithRetry(
                   blogDetail?.featured_image?.file_path
@@ -252,6 +254,8 @@ module.exports = {
                   )
                 ).data;
 
+                updateData.Content=blogDetail?.content || '';
+
                 const bannerImageId = await uploadWithRetry(
                   blogDetail?.banner_image?.file_path
                   , blog
@@ -265,7 +269,7 @@ module.exports = {
                 }
                 console.log('end');
               }
-
+              
               // Check and handle SEO.Meta_Image
               if (!findBlog.SEO?.Meta_Image) {
 
@@ -275,6 +279,7 @@ module.exports = {
                     `https://indususedcars.com/api/pages/${blog?.slug}`
                   )
                 ).data;
+                updateData.Content=blogDetail?.content || '';
                 const metaImageId = await uploadWithRetry(
                   blogDetail?.og_image?.file_path
                   , blog
@@ -298,7 +303,10 @@ module.exports = {
                 try {
                   const updatedBlog = await strapi.documents("api::blog.blog").update({
                     documentId: findBlog.documentId,
-                    data: updateData,
+                    data: {
+                ...updateData,
+                Slug: await generateUniqueSlug(blog.Slug)
+              },
                     status: 'published'
                   });
                   console.log({ updatedBlog });
@@ -413,38 +421,182 @@ module.exports = {
   },
   updateBlogStatus: async (ctx, next) => {
     try {
+      const generateUniqueSlug = async (baseSlug) => {
+        let slug = baseSlug;
+        let counter = 1;
+        let existingBlog;
+        
+        do {
+          existingBlog = await strapi.documents('api::blog.blog').findFirst({
+            filters: { Slug: slug }
+          });
+          
+          if (existingBlog) {
+            slug = `${baseSlug}-${Date.now()}-${counter}`;
+            counter++;
+          }
+        } while (existingBlog);
+        
+        return slug;
+      };
+
+      // First, fetch and update from external API
+      const blogsCount = await axios.get(`https://indususedcars.com/api/pages`);
+      for (let i = 1; i <= blogsCount?.data?.last_page; i++) {
+        const blogList = await axios.get(
+          `https://indususedcars.com/api/pages?page=${i}`
+        );
+
+        for (const blog of blogList?.data?.data) {
+          if (blog?.type === "Blog") {
+            const blogDetail = (await axios.get(
+              `https://indususedcars.com/api/pages/${blog?.slug}`
+            )).data;
+
+            const existingBlog = await strapi.documents('api::blog.blog').findFirst({
+              filters: { Slug: blog?.slug },
+              populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image']
+            });
+
+            if (existingBlog) {
+              await strapi.documents('api::blog.blog').update({
+                documentId: existingBlog.documentId,
+                data: {
+                  Slug: await generateUniqueSlug(blog?.slug),
+                  Content: blogDetail?.content || '',
+                  Top_Description: blogDetail?.top_description || '',
+                  Bottom_Description: blogDetail?.bottom_description || '',
+                  publishedAt: blogDetail?.created_at,
+                  createdAt: blogDetail?.created_at
+                },
+                status: 'published'
+              });
+            }
+          }
+        }
+      }
+
+      // Then process local blog entries
       const blogs = await strapi.documents('api::blog.blog').findMany({
-        status: 'draft'
-      })
+        status: 'draft',
+        populate: ['Featured_Image', 'Banner_Image', 'SEO.Meta_Image']
+      });
+
+      const uploadImage = async (filePath) => {
+        try {
+          if (!filePath) return null;
+          
+          const response = await axios.get(
+            filePath.startsWith('http') ? filePath : `https://indususedcars.com/${filePath}`,
+            { responseType: 'arraybuffer' }
+          );
+
+          const formData = new FormData();
+          const blob = new Blob([response.data], {
+            type: response.headers['content-type']
+          });
+          formData.append('files', blob, `image_${Date.now()}.jpg`);
+
+          const uploadResponse = await axios.post(
+            `${process.env.STRAPI_URL || 'http://localhost:1337'}/api/upload`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          );
+
+          return uploadResponse.data[0];
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          return null;
+        }
+      };
+
+      const processContent = async (content) => {
+        if (!content) return '';
+        
+        const imgRegex = /<img[^>]+src="([^"]+)"[^>]*>/g;
+        let match;
+        let processedContent = content;
+
+        while ((match = imgRegex.exec(content)) !== null) {
+          const originalUrl = match[1];
+          const uploadedImage = await uploadImage(originalUrl);
+
+          if (uploadedImage) {
+            const newUrl = `${process.env.STRAPI_URL || 'http://localhost:1337'}${uploadedImage.url}`;
+            processedContent = processedContent.replace(originalUrl, newUrl);
+          }
+        }
+
+        return processedContent;
+      };
 
       for (const blog of blogs) {
-        console.log({ blog });
-        // const updatedBlog=await strapi.documents('api::blog.blog').update({
-        //   data:{
-        //     publishedAt:new Date()
-        //   },
-        //   status:'published'
-        // })
-        const updatedBlog = await strapi.documents('api::blog.blog').publish({
-          documentId: blog.documentId,
-          status: 'published'
-        })
-        console.log({ updatedBlog });
+        console.log('Processing blog:', blog.Title);
+        
+        const updateData = {};
 
+        if (blog.Content) {
+          const processedContent = await processContent(blog.Content);
+          if (processedContent !== blog.Content) {
+            updateData.Content = processedContent;
+          }
+        }
+
+        if (!blog.Featured_Image) {
+          const featuredImageId = await uploadImage(blog.featured_image?.file_path);
+          if (featuredImageId) {
+            updateData.Featured_Image = { id: featuredImageId.id };
+          }
+        }
+
+        if (!blog.Banner_Image) {
+          const bannerImageId = await uploadImage(blog.banner_image?.file_path);
+          if (bannerImageId) {
+            updateData.Banner_Image = { id: bannerImageId.id };
+          }
+        }
+
+        if (!blog.SEO?.Meta_Image) {
+          const metaImageId = await uploadImage(blog.og_image?.file_path);
+          if (metaImageId) {
+            updateData.SEO = {
+              ...blog.SEO,
+              Meta_Image: { id: metaImageId.id }
+            };
+          }
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          try {
+            await strapi.documents('api::blog.blog').update({
+              documentId: blog.documentId,
+              data: {
+                ...updateData,
+                Slug: await generateUniqueSlug(blog.Slug)
+              },
+              status: 'published'
+            });
+          } catch (error) {
+            console.error('Error updating blog:', error);
+          }
+        }
       }
 
       ctx.body = {
         data: {
           success: true,
-          msg: 'Updated Successfully'
+          msg: 'Blogs updated and published successfully'
         }
-      }
-    }
-    catch (err) {
+      };
+    } catch (err) {
       ctx.status = 500;
       ctx.body = {
-        error: "Internal Server Error",
-        details: err.message,
+        error: 'Internal Server Error',
+        details: err.message
       };
     }
   }
