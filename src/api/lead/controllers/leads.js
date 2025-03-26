@@ -409,20 +409,25 @@ module.exports = {
 
         // Send email to admin
         try {
-          if (admin?.email) {
-            await strapi.plugins['email'].services.email.sendTemplatedEmail(
-              {
-                to: admin?.map((user)=>user?.email),
-                from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`
-              },
-              template.admin,
-              {
-                data: templateData
-              }
-            );
-            console.log('Admin email sent successfully');
+          if (admin && Array.isArray(admin) && admin.length > 0) {
+            const validEmails = admin.filter(user => user?.email).map(user => user.email);
+            if (validEmails.length > 0) {
+              await strapi.plugins['email'].services.email.sendTemplatedEmail(
+                {
+                  to: validEmails,
+                  from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`
+                },
+                template.admin,
+                {
+                  data: templateData
+                }
+              );
+              console.log(`Admin emails sent successfully to ${validEmails.join(', ')}`);
+            } else {
+              console.warn('No valid admin email addresses found');
+            }
           } else {
-            console.warn('Admin email not found');
+            console.warn('No admin users found');
           }
 
           // Send email to user if email is provided
