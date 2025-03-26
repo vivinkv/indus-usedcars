@@ -6,7 +6,7 @@ const XLSX = require("xlsx");
  */
 
 module.exports = {
-  createLead: async (ctx, next) => {
+  createLead: async (ctx, next) => { 
     try {
       const {
         name,
@@ -18,7 +18,8 @@ module.exports = {
         city,
         recaptcha_token,
         source_url,
-        car_id
+        car_id,
+        message
       } = ctx.request.body;
 
       console.log(ctx.request.body);
@@ -88,6 +89,10 @@ module.exports = {
         CustomerEmail: email
       };
 
+      if(message){
+        leadData.Notes=message
+      }
+
       if(lead_type == 'Test Drive'){
         console.log('yes');
         console.log({car});
@@ -130,238 +135,7 @@ module.exports = {
 
       // Send email notifications
       try {
-        let adminEmailSubject = '';
-        let adminEmailTemplate = '';
-        let userEmailSubject = '';
-        let userEmailTemplate = '';
-
-        if (lead_type === 'Test Drive') {
-          adminEmailSubject = 'New Test Drive Request';
-          adminEmailTemplate = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>${adminEmailSubject}</title>
-              <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { text-align: center; margin-bottom: 30px; }
-                .header img { width: 200px; height: auto; }
-                .content { background: #f9f9f9; border-radius: 8px; padding: 25px; margin-bottom: 20px; }
-                h2 { color: #1a73e8; margin-bottom: 20px; }
-                .details { margin-bottom: 20px; }
-                .details h3 { color: #2c3e50; margin-bottom: 10px; }
-                ul { list-style: none; }
-                li { padding: 8px 0; border-bottom: 1px solid #eee; }
-                li:last-child { border-bottom: none; }
-                @media only screen and (max-width: 480px) {
-                  .container { padding: 15px; }
-                  .content { padding: 15px; }
-                }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-               
-                <div class="content">
-                  <h2>New Test Drive Request</h2>
-                  <div class="details">
-                    <h3>Customer Details</h3>
-                    <ul>
-                      <li><strong>Name:</strong> ${name}</li>
-                      <li><strong>Phone:</strong> ${phone_number}</li>
-                      <li><strong>Email:</strong> ${email || 'N/A'}</li>
-                      <li><strong>City:</strong> ${city}</li>
-                      <li><strong>Source Type:</strong> ${source_type || 'N/A'}</li>
-                      <li><strong>UTM Source:</strong> ${utmsource || 'N/A'}</li>
-                      <li><strong>Source URL:</strong> ${source_url || 'N/A'}</li>
-                    </ul>
-                  </div>
-                  <div class="details">
-                    <h3>Car Details</h3>
-                    <ul>
-                      <li><strong>Brand:</strong> ${car?.Brand?.Name || 'N/A'}</li>
-                      <li><strong>Model:</strong> ${car?.Model?.Name || 'N/A'}</li>
-                      <li><strong>Variant:</strong> ${car?.Variant || 'N/A'}</li>
-                      <li><strong>Color:</strong> ${car?.Color || 'N/A'}</li>
-                      <li><strong>Location:</strong> ${car?.Outlet?.Location?.Name || 'N/A'}</li>
-                      <li><strong>Registration:</strong> ${car?.Vehicle_Reg_No || 'N/A'}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </body>
-            </html>
-          `;
-          userEmailSubject = 'Test Drive Request Confirmation';
-          userEmailTemplate = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>${userEmailSubject}</title>
-              <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { text-align: center; margin-bottom: 30px; }
-                .header img { width: 200px; height: auto; }
-                .content { background: #f9f9f9; border-radius: 8px; padding: 25px; margin-bottom: 20px; }
-                h2 { color: #1a73e8; margin-bottom: 20px; }
-                .message { margin-bottom: 20px; }
-                ul { list-style: none; margin: 15px 0; }
-                li { padding: 8px 0; }
-                .footer { text-align: left; color: #666; font-size: 14px; }
-                @media only screen and (max-width: 480px) {
-                  .container { padding: 15px; }
-                  .content { padding: 15px; }
-                }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-               
-                <div class="content">
-                  <h2>Test Drive Request Confirmation</h2>
-                  <div class="message">
-                    <p>Dear ${name},</p>
-                    <p>Thank you for requesting a test drive. We have received your request for:</p>
-                    <ul>
-                      <li><strong>Car:</strong> ${car?.Brand?.Name || ''} ${car?.Model?.Name || ''}</li>
-                      <li><strong>Location:</strong> ${car?.Outlet?.Location?.Name || ''}</li>
-                    </ul>
-                    <p>Our team will contact you shortly at ${phone_number} to schedule your test drive.</p>
-                  </div>
-                  <div class="footer">
-                    <p>Best regards,<br>Indus Motors</p>
-                  </div>
-                </div>
-              </div>
-            </body>
-            </html>
-          `;
-        }
-        else if (lead_type === 'Book') {
-          adminEmailSubject = 'New Car Booking Request';
-          adminEmailTemplate = `
-            <div style="max-width: 600px; margin: 0 auto;">
-             
-              <h2>New Car Booking Request</h2>
-              <p>Customer Details:</p>
-              <ul>
-                <li>Name: ${name}</li>
-                <li>Phone: ${phone_number}</li>
-                <li>Email: ${email || 'N/A'}</li>
-                <li>City: ${city}</li>
-                <li>Date: ${new Date().toISOString().slice(0, 10)}</li>
-                <li>Source Type: ${source_type || 'N/A'}</li>
-                <li>UTM Source: ${utmsource || 'N/A'}</li>
-                <li>Source URL: ${source_url || 'N/A'}</li>
-              </ul>
-            </div>
-          `;
-          userEmailSubject = 'Booking Request Confirmation';
-          userEmailTemplate = `
-            <div style="max-width: 600px; margin: 0 auto;">
-             
-              <h2>Booking Request Confirmation</h2>
-              <p>Dear ${name},</p>
-              <p>Thank you for your booking request. We have received your request and our team will contact you shortly at ${phone_number}.</p>
-              <p>Best regards,<br>Indus Motors</p>
-            </div>
-          `;
-        } else if (lead_type === 'Buy') {
-          adminEmailSubject = 'New Car Purchase Inquiry';
-          adminEmailTemplate = `
-            <h2>New Car Purchase Inquiry</h2>
-            <ul>
-              <li>Name: ${name}</li>
-              <li>Email: ${email || 'N/A'}</li>
-              <li>Phone: ${phone_number}</li>
-              <li>City: ${city}</li>
-              <li>Source Type: ${source_type || 'N/A'}</li>
-              <li>UTM Source: ${utmsource || 'N/A'}</li>
-              <li>Source URL: ${source_url || 'N/A'}</li>
-            </ul>
-          `;
-          userEmailSubject = 'Purchase Inquiry Confirmation';
-          userEmailTemplate = `
-            <h2>Purchase Inquiry Confirmation</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for your interest in purchasing a car from us. Our team will contact you shortly at ${phone_number} to discuss your requirements.</p>
-            <p>Best regards,<br>Indus Motors</p>
-          `;
-        } else if (lead_type === 'Sell') {
-          adminEmailSubject = 'New Car Sell Request';
-          adminEmailTemplate = `
-            <h2>New Car Sell Request</h2>
-            <ul>
-              <li>Name: ${name}</li>
-              <li>Email: ${email || 'N/A'}</li>
-              <li>Phone: ${phone_number}</li>
-              <li>City: ${city}</li>
-              <li>Source Type: ${source_type || 'N/A'}</li>
-              <li>UTM Source: ${utmsource || 'N/A'}</li>
-              <li>Source URL: ${source_url || 'N/A'}</li>
-            </ul>
-          `;
-          userEmailSubject = 'Car Sell Request Confirmation';
-          userEmailTemplate = `
-            <h2>Car Sell Request Confirmation</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for your interest in selling your car through us. Our team will contact you shortly at ${phone_number} to discuss your car details.</p>
-            <p>Best regards,<br>Indus Motors</p>
-          `;
-        } else if (lead_type === 'Request Callback') {
-          adminEmailSubject = 'New Callback Request';
-          adminEmailTemplate = `
-            <h2>New Callback Request</h2>
-            <ul>
-              <li>Name: ${name}</li>
-              <li>Email: ${email || 'N/A'}</li>
-              <li>Phone: ${phone_number}</li>
-              <li>City: ${city}</li>
-              <li>Source Type: ${source_type || 'N/A'}</li>
-              <li>UTM Source: ${utmsource || 'N/A'}</li>
-              <li>Source URL: ${source_url || 'N/A'}</li>
-            </ul>
-          `;
-          userEmailSubject = 'Callback Request Confirmation';
-          userEmailTemplate = `
-            <h2>Callback Request Confirmation</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for requesting a callback. Our team will contact you shortly at ${phone_number}.</p>
-            <p>Best regards,<br>Indus Motors</p>
-          `;
-        } else {
-          adminEmailSubject = 'New Lead Generated';
-          adminEmailTemplate = `
-            <h2>New Lead Details</h2>
-            <ul>
-              <li>Name: ${name}</li>
-              <li>Email: ${email || 'N/A'}</li>
-              <li>Phone: ${phone_number}</li>
-              <li>City: ${city}</li>
-              <li>Lead Type: ${lead_type}</li>
-              <li>Source Type: ${source_type || 'N/A'}</li>
-              <li>UTM Source: ${utmsource || 'N/A'}</li>
-              <li>Source URL: ${source_url || 'N/A'}</li>
-            </ul>
-          `;
-          userEmailSubject = 'Thank You for Contacting Us';
-          userEmailTemplate = `
-            <h2>Thank You for Contacting Us</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for reaching out to us. Our team will contact you shortly at ${phone_number}.</p>
-            <p>Best regards,<br>Indus Motors</p>
-          `;
-        }
-
-        const admin = await strapi.query('admin::user').findOne({
+        const admin = await strapi.query('admin::user').findMany({
           where: {
             roles: {
               code: 'strapi-super-admin'
@@ -371,18 +145,281 @@ module.exports = {
         });
 
         console.log({admin});
-        
+
+        // Define email templates based on lead type
+        const emailTemplates = {
+          'Test Drive': {
+            admin: {
+              subject: 'New Test Drive Request',
+              text: 'New test drive request received',
+              html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>New Test Drive Request</title>
+                  <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .content { background: #f9f9f9; border-radius: 8px; padding: 25px; }
+                    h2 { color: #1a73e8; margin-bottom: 20px; }
+                    .details { margin-bottom: 20px; }
+                    ul { list-style: none; }
+                    li { padding: 8px 0; border-bottom: 1px solid #eee; }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="content">
+                      <h2>New Test Drive Request</h2>
+                      <div class="details">
+                        <h3>Customer Details</h3>
+                        <ul>
+                          <li><strong>Name:</strong> <%= data.name %></li>
+                          <li><strong>Phone:</strong> <%= data.phone_number %></li>
+                          <li><strong>Email:</strong> <%= data.email || 'N/A' %></li>
+                          <li><strong>City:</strong> <%= data.city %></li>
+                          <li><strong>Source Type:</strong> <%= data.source_type || 'N/A' %></li>
+                          <li><strong>UTM Source:</strong> <%= data.utmsource || 'N/A' %></li>
+                          <li><strong>Source URL:</strong> <%= data.source_url || 'N/A' %></li>
+                        </ul>
+                      </div>
+                      <div class="details">
+                        <h3>Car Details</h3>
+                        <ul>
+                          <li><strong>Brand:</strong> <%= data.car?.Brand?.Name || 'N/A' %></li>
+                          <li><strong>Model:</strong> <%= data.car?.Model?.Name || 'N/A' %></li>
+                          <li><strong>Variant:</strong> <%= data.car?.Variant || 'N/A' %></li>
+                          <li><strong>Color:</strong> <%= data.car?.Color || 'N/A' %></li>
+                          <li><strong>Location:</strong> <%= data.car?.Outlet?.Location?.Name || 'N/A' %></li>
+                          <li><strong>Registration:</strong> <%= data.car?.Vehicle_Reg_No || 'N/A' %></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </body>
+                </html>
+              `
+            },
+            user: {
+              subject: 'Test Drive Request Confirmation',
+              text: 'Thank you for requesting a test drive',
+              html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Test Drive Request Confirmation</title>
+                  <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .content { background: #f9f9f9; border-radius: 8px; padding: 25px; }
+                    h2 { color: #1a73e8; margin-bottom: 20px; }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="content">
+                      <h2>Test Drive Request Confirmation</h2>
+                      <div class="message">
+                        <p>Dear <%= data.name %>,</p>
+                        <p>Thank you for requesting a test drive. We have received your request for:</p>
+                        <ul>
+                          <li><strong>Car:</strong> <%= data.car?.Brand?.Name || '' %> <%= data.car?.Model?.Name || '' %></li>
+                          <li><strong>Location:</strong> <%= data.car?.Outlet?.Location?.Name || '' %></li>
+                        </ul>
+                        <p>Our team will contact you shortly at <%= data.phone_number %> to schedule your test drive.</p>
+                      </div>
+                      <div class="footer">
+                        <p>Best regards,<br>Indus Motors</p>
+                      </div>
+                    </div>
+                  </div>
+                </body>
+                </html>
+              `
+            }
+          },
+          'Book': {
+            admin: {
+              subject: 'New Car Booking Request',
+              text: 'New car booking request received',
+              html: `
+                <div style="max-width: 600px; margin: 0 auto;">
+                  <h2>New Car Booking Request</h2>
+                  <p>Customer Details:</p>
+                  <ul>
+                    <li>Name: <%= data.name %></li>
+                    <li>Phone: <%= data.phone_number %></li>
+                    <li>Email: <%= data.email || 'N/A' %></li>
+                    <li>City: <%= data.city %></li>
+                    <li>Date: <%= data.date %></li>
+                    <li>Source Type: <%= data.source_type || 'N/A' %></li>
+                    <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
+                    <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                  </ul>
+                </div>
+              `
+            },
+            user: {
+              subject: 'Booking Request Confirmation',
+              text: 'Thank you for your booking request',
+              html: `
+                <div style="max-width: 600px; margin: 0 auto;">
+                  <h2>Booking Request Confirmation</h2>
+                  <p>Dear <%= data.name %>,</p>
+                  <p>Thank you for your booking request. We have received your request and our team will contact you shortly at <%= data.phone_number %>.</p>
+                  <p>Best regards,<br>Indus Motors</p>
+                </div>
+              `
+            }
+          },
+          'Buy': {
+            admin: {
+              subject: 'New Car Purchase Inquiry',
+              text: 'New car purchase inquiry received',
+              html: `
+                <h2>New Car Purchase Inquiry</h2>
+                <ul>
+                  <li>Name: <%= data.name %></li>
+                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Phone: <%= data.phone_number %></li>
+                  <li>City: <%= data.city %></li>
+                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
+                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
+                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                </ul>
+              `
+            },
+            user: {
+              subject: 'Purchase Inquiry Confirmation',
+              text: 'Thank you for your purchase inquiry',
+              html: `
+                <h2>Purchase Inquiry Confirmation</h2>
+                <p>Dear <%= data.name %>,</p>
+                <p>Thank you for your interest in purchasing a car from us. Our team will contact you shortly at <%= data.phone_number %> to discuss your requirements.</p>
+                <p>Best regards,<br>Indus Motors</p>
+              `
+            }
+          },
+          'Sell': {
+            admin: {
+              subject: 'New Car Sell Request',
+              text: 'New car sell request received',
+              html: `
+                <h2>New Car Sell Request</h2>
+                <ul>
+                  <li>Name: <%= data.name %></li>
+                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Phone: <%= data.phone_number %></li>
+                  <li>City: <%= data.city %></li>
+                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
+                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
+                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                </ul>
+              `
+            },
+            user: {
+              subject: 'Car Sell Request Confirmation',
+              text: 'Thank you for your car sell request',
+              html: `
+                <h2>Car Sell Request Confirmation</h2>
+                <p>Dear <%= data.name %>,</p>
+                <p>Thank you for your interest in selling your car through us. Our team will contact you shortly at <%= data.phone_number %> to discuss your car details.</p>
+                <p>Best regards,<br>Indus Motors</p>
+              `
+            }
+          },
+          'Request Callback': {
+            admin: {
+              subject: 'New Callback Request',
+              text: 'New callback request received',
+              html: `
+                <h2>New Callback Request</h2>
+                <ul>
+                  <li>Name: <%= data.name %></li>
+                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Phone: <%= data.phone_number %></li>
+                  <li>City: <%= data.city %></li>
+                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
+                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
+                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                </ul>
+              `
+            },
+            user: {
+              subject: 'Callback Request Confirmation',
+              text: 'Thank you for your callback request',
+              html: `
+                <h2>Callback Request Confirmation</h2>
+                <p>Dear <%= data.name %>,</p>
+                <p>Thank you for requesting a callback. Our team will contact you shortly at <%= data.phone_number %>.</p>
+                <p>Best regards,<br>Indus Motors</p>
+              `
+            }
+          },
+          'default': {
+            admin: {
+              subject: 'New Lead Generated',
+              text: 'New lead generated',
+              html: `
+                <h2>New Lead Details</h2>
+                <ul>
+                  <li>Name: <%= data.name %></li>
+                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Phone: <%= data.phone_number %></li>
+                  <li>City: <%= data.city %></li>
+                  <li>Lead Type: <%= data.lead_type %></li>
+                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
+                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
+                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                </ul>
+              `
+            },
+            user: {
+              subject: 'Thank You for Contacting Us',
+              text: 'Thank you for contacting us',
+              html: `
+                <h2>Thank You for Contacting Us</h2>
+                <p>Dear <%= data.name %>,</p>
+                <p>Thank you for reaching out to us. Our team will contact you shortly at <%= data.phone_number %>.</p>
+                <p>Best regards,<br>Indus Motors</p>
+              `
+            }
+          }
+        };
+
+        const template = emailTemplates[lead_type] || emailTemplates['default'];
+        const templateData = {
+          name,
+          email,
+          phone_number,
+          city,
+          lead_type,
+          source_type,
+          utmsource,
+          source_url,
+          car,
+          date: new Date().toISOString().slice(0, 10)
+        };
 
         // Send email to admin
         try {
           if (admin?.email) {
-            await strapi.plugins['email'].services.email.send({
-              to: admin.email,
-              from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`,
-              subject: adminEmailSubject,
-              text: adminEmailSubject, // Plain text version
-              html: adminEmailTemplate,
-            });
+            await strapi.plugins['email'].services.email.sendTemplatedEmail(
+              {
+                to: admin?.map((user)=>user?.email),
+                from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`
+              },
+              template.admin,
+              {
+                data: templateData
+              }
+            );
             console.log('Admin email sent successfully');
           } else {
             console.warn('Admin email not found');
@@ -390,13 +427,16 @@ module.exports = {
 
           // Send email to user if email is provided
           if (email) {
-            await strapi.plugins['email'].services.email.send({
-              to: email,
-              from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`,
-              subject: userEmailSubject,
-              text: userEmailSubject, // Plain text version
-              html: userEmailTemplate,
-            });
+            await strapi.plugins['email'].services.email.sendTemplatedEmail(
+              {
+                to: email,
+                from: `${process.env.SMTP_DEFAULT_NAME} <${process.env.SMTP_USERNAME}>`
+              },
+              template.user,
+              {
+                data: templateData
+              }
+            );
             console.log('User email sent successfully');
           }
         } catch (sendError) {
