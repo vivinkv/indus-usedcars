@@ -179,22 +179,22 @@ module.exports = {
                         <ul>
                           <li><strong>Name:</strong> <%= data.name %></li>
                           <li><strong>Phone:</strong> <%= data.phone_number %></li>
-                          <li><strong>Email:</strong> <%= data.email || 'N/A' %></li>
+                          <li><strong>Email:</strong> <%= data.email  %></li>
                           <li><strong>City:</strong> <%= data.city %></li>
-                          <li><strong>Source Type:</strong> <%= data.source_type || 'N/A' %></li>
-                          <li><strong>UTM Source:</strong> <%= data.utmsource || 'N/A' %></li>
-                          <li><strong>Source URL:</strong> <%= data.source_url || 'N/A' %></li>
+                          <li><strong>Source Type:</strong> <%= data.source_type  %></li>
+                          <li><strong>UTM Source:</strong> <%= data.utmsource  %></li>
+                          <li><strong>Source URL:</strong> <%= data.source_url  %></li>
                         </ul>
                       </div>
                       <div class="details">
                         <h3>Car Details</h3>
                         <ul>
-                          <li><strong>Brand:</strong> <%= data.car?.Brand?.Name || 'N/A' %></li>
-                          <li><strong>Model:</strong> <%= data.car?.Model?.Name || 'N/A' %></li>
-                          <li><strong>Variant:</strong> <%= data.car?.Variant || 'N/A' %></li>
-                          <li><strong>Color:</strong> <%= data.car?.Color || 'N/A' %></li>
-                          <li><strong>Location:</strong> <%= data.car?.Outlet?.Location?.Name || 'N/A' %></li>
-                          <li><strong>Registration:</strong> <%= data.car?.Vehicle_Reg_No || 'N/A' %></li>
+                          <li><strong>Brand:</strong> <%= data.car?.Brand?.Name  %></li>
+                          <li><strong>Model:</strong> <%= data.car?.Model?.Name  %></li>
+                          <li><strong>Variant:</strong> <%= data.car?.Variant  %></li>
+                          <li><strong>Color:</strong> <%= data.car?.Color  %></li>
+                          <li><strong>Location:</strong> <%= data.car?.Outlet?.Location?.Name  %></li>
+                          <li><strong>Registration:</strong> <%= data.car?.Vehicle_Reg_No  %></li>
                         </ul>
                       </div>
                     </div>
@@ -255,12 +255,12 @@ module.exports = {
                   <ul>
                     <li>Name: <%= data.name %></li>
                     <li>Phone: <%= data.phone_number %></li>
-                    <li>Email: <%= data.email || 'N/A' %></li>
+                    <li>Email: <%= data.email  %></li>
                     <li>City: <%= data.city %></li>
                     <li>Date: <%= data.date %></li>
-                    <li>Source Type: <%= data.source_type || 'N/A' %></li>
-                    <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
-                    <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                    <li>Source Type: <%= data.source_type  %></li>
+                    <li>UTM Source: <%= data.utmsource  %></li>
+                    <li>Source URL: <%= data.source_url  %></li>
                   </ul>
                 </div>
               `
@@ -286,12 +286,12 @@ module.exports = {
                 <h2>New Car Purchase Inquiry</h2>
                 <ul>
                   <li>Name: <%= data.name %></li>
-                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Email: <%= data.email  %></li>
                   <li>Phone: <%= data.phone_number %></li>
                   <li>City: <%= data.city %></li>
-                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
-                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
-                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                  <li>Source Type: <%= data.source_type  %></li>
+                  <li>UTM Source: <%= data.utmsource  %></li>
+                  <li>Source URL: <%= data.source_url  %></li>
                 </ul>
               `
             },
@@ -314,12 +314,12 @@ module.exports = {
                 <h2>New Car Sell Request</h2>
                 <ul>
                   <li>Name: <%= data.name %></li>
-                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Email: <%= data.email  %></li>
                   <li>Phone: <%= data.phone_number %></li>
                   <li>City: <%= data.city %></li>
-                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
-                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
-                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                  <li>Source Type: <%= data.source_type  %></li>
+                  <li>UTM Source: <%= data.utmsource  %></li>
+                  <li>Source URL: <%= data.source_url  %></li>
                 </ul>
               `
             },
@@ -342,12 +342,12 @@ module.exports = {
                 <h2>New Callback Request</h2>
                 <ul>
                   <li>Name: <%= data.name %></li>
-                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Email: <%= data.email  %></li>
                   <li>Phone: <%= data.phone_number %></li>
                   <li>City: <%= data.city %></li>
-                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
-                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
-                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                  <li>Source Type: <%= data.source_type  %></li>
+                  <li>UTM Source: <%= data.utmsource  %></li>
+                  <li>Source URL: <%= data.source_url  %></li>
                 </ul>
               `
             },
@@ -370,13 +370,13 @@ module.exports = {
                 <h2>New Lead Details</h2>
                 <ul>
                   <li>Name: <%= data.name %></li>
-                  <li>Email: <%= data.email || 'N/A' %></li>
+                  <li>Email: <%= data.email  %></li>
                   <li>Phone: <%= data.phone_number %></li>
                   <li>City: <%= data.city %></li>
                   <li>Lead Type: <%= data.lead_type %></li>
-                  <li>Source Type: <%= data.source_type || 'N/A' %></li>
-                  <li>UTM Source: <%= data.utmsource || 'N/A' %></li>
-                  <li>Source URL: <%= data.source_url || 'N/A' %></li>
+                  <li>Source Type: <%= data.source_type  %></li>
+                  <li>UTM Source: <%= data.utmsource  %></li>
+                  <li>Source URL: <%= data.source_url  %></li>
                 </ul>
               `
             },

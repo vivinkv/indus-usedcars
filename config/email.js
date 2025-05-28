@@ -1,15 +1,17 @@
-// module.exports = {
-//   provider: '@strapi/provider-email-nodemailer',
-//   providerOptions: {
-//     host: 'smtp.gmail.com',
-//     port: 587,
-//     auth: {
-//       user: process.env.SMTP_USERNAME,
-//       pass: process.env.SMTP_PASSWORD,
-//     },
-//   },
-//   settings: {
-//     defaultFrom: process.env.SMTP_USERNAME,
-//     defaultReplyTo: process.env.SMTP_USERNAME,
-//   },
-// };
+
+const nodemailer=require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,  
+    secure: true,  
+    auth: {
+      user: process.env.MAILER_EMAIL,  
+      pass: process.env.MAILER_PASSWORD,     
+    },
+    tls: {
+      rejectUnauthorized: false,  
+    },
+  });
+
+  module.exports={transporter}
